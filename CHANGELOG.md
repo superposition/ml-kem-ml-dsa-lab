@@ -10,4 +10,5 @@
 - Added a CI-enforced Rust crate gate and derivation issue template.
 - Added glossary, FIPS symbol maps, and docs validation for roadmap modules.
 - Added source-linked parameter derivation, shared parameter fixture, and complete C++ parameter tests.
+- Added source-linked field-element derivation and complete C++ field tests for both moduli.
 - Added agentic learning schema and production readiness gates.

@@ -13,6 +13,8 @@ class ModQ {
   constexpr ModQ() = default;
   constexpr explicit ModQ(std::int64_t value) : value_(normalize(value)) {}
 
+  [[nodiscard]] static constexpr std::int32_t modulus() noexcept { return Q; }
+
   [[nodiscard]] constexpr std::int32_t value() const noexcept { return value_; }
 
   [[nodiscard]] constexpr std::int32_t centered() const noexcept {
@@ -61,10 +63,12 @@ class ModQ {
   std::int32_t value_{0};
 };
 
+using MlKemField = ModQ<3329>;
+using MlDsaField = ModQ<8380417>;
+
 template <std::int32_t Q>
 std::ostream& operator<<(std::ostream& stream, ModQ<Q> value) {
   return stream << value.value();
 }
 
 }  // namespace pqcore
-

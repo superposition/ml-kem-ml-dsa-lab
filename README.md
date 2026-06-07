@@ -14,7 +14,7 @@ This repository is designed as a derivation-first implementation lab. Production
 | Derivation-first process | Yes | Yes | Yes | Internal | CI blocks premature Rust crates |
 | Rust crate | No | No | No | No | Blocked by the Rust crate gate |
 | Parameter metadata | Yes | C++ + fixture | C++ | Internal | Source-linked derivation and shared fixture exist |
-| Finite-field arithmetic | Partial | C++ | C++ | No | Needs expanded derivation notes |
+| Finite-field arithmetic | Yes | C++ | C++ | Internal | Source-linked derivation and arithmetic tests exist |
 | Polynomial arithmetic | Partial | C++ | C++ | No | Baseline negacyclic multiplication exists |
 | ML-KEM keygen/encap/decap | No | No | API only | No | C++ fails closed with `NotImplemented` |
 | ML-DSA keygen/sign/verify | No | No | API only | No | C++ fails closed with `NotImplemented` |
@@ -71,6 +71,7 @@ This library must not be treated as production cryptography until the production
 - NIST ACVP vector generation/validation data is the planned test-vector source.
 - `docs/glossary.md` explains shared notation before implementation work.
 - `docs/parameter-tables.md` derives the shared parameter metadata.
+- `docs/field-elements.md` derives canonical and centered field representation.
 - `docs/fips-203-symbols.md` maps ML-KEM symbols and modules.
 - `docs/fips-204-symbols.md` maps ML-DSA symbols and modules.
 
