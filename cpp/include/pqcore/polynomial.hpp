@@ -11,6 +11,8 @@ namespace pqcore {
 
 template <std::size_t N, std::int32_t Q>
 class Polynomial {
+  static_assert(N > 0, "Polynomial degree must be positive");
+
  public:
   using Coefficient = ModQ<Q>;
   using Coefficients = std::array<Coefficient, N>;
@@ -23,7 +25,16 @@ class Polynomial {
     }
   }
 
+  [[nodiscard]] static constexpr std::size_t degree() noexcept { return N; }
+  [[nodiscard]] static constexpr std::int32_t modulus() noexcept { return Q; }
+
   [[nodiscard]] static constexpr Polynomial zero() { return Polynomial{}; }
+
+  [[nodiscard]] static constexpr Polynomial one() {
+    Polynomial result;
+    result.coefficients_[0] = Coefficient{1};
+    return result;
+  }
 
   [[nodiscard]] constexpr const Coefficients& coefficients() const noexcept {
     return coefficients_;
@@ -72,5 +83,7 @@ class Polynomial {
   Coefficients coefficients_{};
 };
 
-}  // namespace pqcore
+using MlKemPolynomial = Polynomial<256, 3329>;
+using MlDsaPolynomial = Polynomial<256, 8380417>;
 
+}  // namespace pqcore

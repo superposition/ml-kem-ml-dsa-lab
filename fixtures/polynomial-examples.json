@@ -1,0 +1,53 @@
+{
+  "source": {
+    "ml_kem": {
+      "standard": "FIPS 203",
+      "ring_section": "Section 2.4",
+      "url": "https://csrc.nist.gov/pubs/fips/203/final"
+    },
+    "ml_dsa": {
+      "standard": "FIPS 204",
+      "ring_section": "Section 2.3",
+      "url": "https://csrc.nist.gov/pubs/fips/204/final"
+    },
+    "status": "repository-owned derivation examples, not official NIST vectors"
+  },
+  "examples": [
+    {
+      "name": "tiny_x3_times_x_wraps_to_minus_one",
+      "n": 4,
+      "q": 17,
+      "operation": "schoolbook_mul_negacyclic",
+      "lhs": [0, 0, 0, 1],
+      "rhs": [0, 1, 0, 0],
+      "expected": [16, 0, 0, 0]
+    },
+    {
+      "name": "tiny_addition_is_coefficient_wise",
+      "n": 4,
+      "q": 17,
+      "operation": "add",
+      "lhs": [1, 2, 3, 4],
+      "rhs": [4, 3, 2, 1],
+      "expected": [5, 5, 5, 5]
+    },
+    {
+      "name": "tiny_subtraction_wraps_below_zero",
+      "n": 4,
+      "q": 17,
+      "operation": "sub",
+      "lhs": [1, 2, 3, 4],
+      "rhs": [4, 3, 2, 1],
+      "expected": [14, 16, 1, 3]
+    },
+    {
+      "name": "ml_kem_x255_times_x_wraps_to_minus_one",
+      "n": 256,
+      "q": 3329,
+      "operation": "schoolbook_mul_negacyclic_sparse",
+      "lhs_sparse": [{"index": 255, "value": 1}],
+      "rhs_sparse": [{"index": 1, "value": 1}],
+      "expected_sparse": [{"index": 0, "value": 3328}]
+    }
+  ]
+}
