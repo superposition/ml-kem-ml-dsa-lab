@@ -96,6 +96,10 @@ if(PQCORE_BUILD_TESTS)
   target_link_libraries(test_vector_harness PRIVATE pqcore)
   add_test(NAME test_vector_harness COMMAND test_vector_harness)
 
+  add_executable(test_secret_data tests/test_secret_data.cpp)
+  target_link_libraries(test_secret_data PRIVATE pqcore)
+  add_test(NAME test_secret_data COMMAND test_secret_data)
+
   add_executable(test_polynomial tests/test_polynomial.cpp)
   target_link_libraries(test_polynomial PRIVATE pqcore)
   add_test(NAME test_polynomial COMMAND test_polynomial)

@@ -172,6 +172,16 @@ deterministic variant uses 32 zero bytes. The C++ internal test hook takes expli
 `signing_random` so tests can exercise the signing flow reproducibly without configuring production
 entropy.
 
+## Side-Channel Review
+
+The current side-channel review state is recorded in `docs/side-channel-review.md` and
+`audits/side-channel/manifest.json`.
+
+The deterministic rejection loop is reviewed only as a flow harness. It intentionally exercises a
+rejected attempt before deterministic acceptance; it is not production signing behavior. Public ML-DSA
+signing remains fail-closed until the final rejection loop, hint handling, optimized compiler output,
+and external cryptographic review are complete.
+
 ## Official Vectors
 
 Official vector ingestion is planned under the ACVP/KAT vector gate. Once those vectors and the missing

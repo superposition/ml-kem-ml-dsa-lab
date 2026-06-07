@@ -1,6 +1,6 @@
-.PHONY: test cpp-test validate-json validate-docs validate-vectors rust-crate-gate clean
+.PHONY: test cpp-test validate-json validate-docs validate-vectors validate-side-channel rust-crate-gate clean
 
-test: cpp-test validate-json validate-docs validate-vectors rust-crate-gate
+test: cpp-test validate-json validate-docs validate-vectors validate-side-channel rust-crate-gate
 
 cpp-test:
 	cmake -S cpp -B build/cpp -DPQCORE_BUILD_TESTS=ON
@@ -22,12 +22,16 @@ validate-json:
 	python3 -m json.tool fixtures/ml-dsa-signature-examples.json >/dev/null
 	python3 -m json.tool test-vectors/manifest.json >/dev/null
 	python3 -m json.tool test-vectors/placeholders/public-api-failclosed.json >/dev/null
+	python3 -m json.tool audits/side-channel/manifest.json >/dev/null
 
 validate-docs:
 	bash scripts/check-docs-glossary.sh
 
 validate-vectors:
 	python3 scripts/check-vector-manifest.py --self-test
+
+validate-side-channel:
+	python3 scripts/check-side-channel-manifest.py --self-test
 
 rust-crate-gate:
 	bash scripts/check-rust-crate-gate.sh

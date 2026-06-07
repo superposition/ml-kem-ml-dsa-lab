@@ -20,4 +20,5 @@
 - Added source-linked ML-DSA rounding, hint, and challenge helper derivation with C++ tests.
 - Added source-linked ML-DSA signature-flow derivation, deterministic internal harness, and public fail-closed tests.
 - Added official-vector manifest validation, C++ placeholder vector harness, and Rust differential-test derivation notes.
+- Added side-channel review manifest validation, secret-debug redaction tests, and Gate 3 blocker tracking.
 - Added agentic learning schema and production readiness gates.

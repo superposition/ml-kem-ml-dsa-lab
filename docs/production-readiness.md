@@ -20,6 +20,8 @@ Production cryptography has not yet been determined for this repository. A produ
 - Secret-dependent memory access is removed or justified.
 - Compiler behavior is reviewed for optimized builds.
 - Timing tests are advisory only; code review is required.
+- Current gate state is tracked in `docs/side-channel-review.md` and `audits/side-channel/manifest.json`.
+- Production status remains false while the manifest status is `incomplete-production-blocker`.
 
 ## Gate 4: Entropy and RNG
 
@@ -38,4 +40,3 @@ Production cryptography has not yet been determined for this repository. A produ
 - At least one external cryptographic review is completed.
 - Findings are tracked publicly.
 - Production-readiness claims are tied to a signed release tag.
-

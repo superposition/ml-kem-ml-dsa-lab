@@ -8,8 +8,7 @@ Before a production-ready release, this project requires:
 
 - Complete FIPS 203 and FIPS 204 algorithm coverage.
 - Official vector coverage.
-- Constant-time review for all operations that touch secret data.
+- Constant-time review for all operations that touch secret data, tracked through `docs/side-channel-review.md`.
 - Fuzzing and sanitizer coverage.
 - Dependency and build provenance review.
 - External cryptographic review.
-

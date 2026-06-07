@@ -118,6 +118,16 @@ Current internal test-hook errors:
 Secret-dependent decapsulation failure does not expose a distinct error class. A malformed but
 well-sized ciphertext returns a fallback shared secret.
 
+## Side-Channel Review
+
+The current side-channel review state is recorded in `docs/side-channel-review.md` and
+`audits/side-channel/manifest.json`.
+
+The internal ML-KEM-512 decapsulation failure path is reviewed for the deterministic test hook:
+ciphertext equality is accumulated across the full ciphertext, and shared-secret selection is
+mask-based. This is still a production blocker until real hashing, official vectors, optimized
+compiler-output review, and external cryptographic review land.
+
 ## Deterministic Test Mode
 
 FIPS 203 defines `H`, `G`, and `J` through SHA3/SHAKE functions. This repository does not yet

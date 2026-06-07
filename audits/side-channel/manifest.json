@@ -1,0 +1,296 @@
+{
+  "schema_version": 1,
+  "gate": "constant-time",
+  "gate_status": "incomplete-production-blocker",
+  "production_status": false,
+  "timing_tests": "advisory-only",
+  "timing_tests_note": "No timing smoke test can close this gate. Future timing tests are advisory signals only and must be paired with code review and optimized compiler-output review.",
+  "secret_debug_policy": {
+    "raw_debug_output_allowed": false,
+    "cxx_annotation_type": "pqcore::SecretBytesView",
+    "cxx_test": "test_secret_data",
+    "note": "Secret-bearing byte strings must be printed through redacting views or not printed at all."
+  },
+  "modules": [
+    {
+      "id": "field-polynomial-ntt",
+      "doc": "docs/side-channel-review.md",
+      "source_files": [
+        "cpp/include/pqcore/field.hpp",
+        "cpp/include/pqcore/polynomial.hpp",
+        "cpp/include/pqcore/ntt.hpp"
+      ],
+      "review_status": "not-production-reviewed",
+      "public_inputs": ["modulus metadata", "public polynomial fixtures"],
+      "secret_inputs": ["secret coefficients when the shared types are used by PKE, KEM, or DSA"],
+      "secret_derived_intermediates": ["products", "NTT-domain coefficients", "inverse-NTT coefficients"],
+      "secret_dependent_branches": [
+        {
+          "description": "current arithmetic has value-dependent normalization branches",
+          "status": "open-production-blocker"
+        }
+      ],
+      "secret_dependent_memory_access": [
+        {
+          "description": "loops use public fixed dimensions; future table lookups must not be indexed by secret values",
+          "status": "needs-final-review"
+        }
+      ],
+      "error_paths": [
+        {
+          "description": "public bounds errors are shape errors, not secret-dependent production failures",
+          "status": "documented"
+        }
+      ],
+      "side_channel_note": "The shared arithmetic types are correctness scaffolding. They become secret-bearing when used by K-PKE, KEM, or ML-DSA and require final constant-time review before production."
+    },
+    {
+      "id": "encoding-compression",
+      "doc": "docs/side-channel-review.md",
+      "source_files": ["cpp/include/pqcore/encoding.hpp"],
+      "review_status": "not-production-reviewed",
+      "public_inputs": ["public keys", "ciphertexts", "signatures", "bit widths"],
+      "secret_inputs": ["secret-key encodings once ML-DSA key packing lands"],
+      "secret_derived_intermediates": ["compressed secret-bearing coefficients"],
+      "secret_dependent_branches": [
+        {
+          "description": "domain checks branch on input values; production secret-key encoders must avoid secret-dependent rejects",
+          "status": "open-production-blocker"
+        }
+      ],
+      "secret_dependent_memory_access": [
+        {
+          "description": "byte packing loops use public lengths and sequential access",
+          "status": "documented"
+        }
+      ],
+      "error_paths": [
+        {
+          "description": "malformed public byte lengths throw; secret-key parsing policy is not complete",
+          "status": "needs-final-review"
+        }
+      ],
+      "side_channel_note": "ML-KEM encoding currently covers public byte contracts. Secret-key encoders and decoders must get separate side-channel review when added."
+    },
+    {
+      "id": "sampling",
+      "doc": "docs/side-channel-review.md",
+      "source_files": ["cpp/include/pqcore/sampling.hpp"],
+      "review_status": "not-production-reviewed",
+      "public_inputs": ["public sampler parameters", "challenge bytes"],
+      "secret_inputs": ["seeds", "PRF input", "secret-vector expansion input", "signing mask input"],
+      "secret_derived_intermediates": ["bounded coefficients", "secret vectors", "mask vectors", "challenge polynomials"],
+      "secret_dependent_branches": [
+        {
+          "description": "rejection loops branch on candidate values",
+          "status": "open-production-blocker"
+        }
+      ],
+      "secret_dependent_memory_access": [
+        {
+          "description": "current samplers write sequential coefficients; future XOF readers need review for bounded loops and buffer handling",
+          "status": "needs-final-review"
+        }
+      ],
+      "error_paths": [
+        {
+          "description": "insufficient byte streams throw in test hooks; production failure handling must destroy intermediates",
+          "status": "open-production-blocker"
+        }
+      ],
+      "side_channel_note": "Sampling tests prove bounds and parsing behavior only. Real SHAKE/XOF/PRF plumbing and secret-bearing sampler loops remain production blockers."
+    },
+    {
+      "id": "ml-kem-pke",
+      "doc": "docs/side-channel-review.md",
+      "source_files": ["cpp/include/pqcore/pke.hpp"],
+      "review_status": "internal-test-hook-only",
+      "public_inputs": ["encryption key", "ciphertext", "message length"],
+      "secret_inputs": ["keygen seed", "sigma", "decryption key", "encryption coins"],
+      "secret_derived_intermediates": ["s", "e", "y", "e1", "e2", "secret NTT vector", "decrypted message"],
+      "secret_dependent_branches": [
+        {
+          "description": "decryption and sampling paths operate on secret-derived coefficients; production branch review is incomplete",
+          "status": "open-production-blocker"
+        }
+      ],
+      "secret_dependent_memory_access": [
+        {
+          "description": "matrix and vector loops use public dimensions; secret-bearing coefficient access still needs optimized review",
+          "status": "needs-final-review"
+        }
+      ],
+      "error_paths": [
+        {
+          "description": "malformed public shapes throw before secret processing",
+          "status": "documented"
+        }
+      ],
+      "side_channel_note": "The K-PKE path is a deterministic test hook. It cannot support production claims until SHAKE/XOF/PRF, vectors, and side-channel review land."
+    },
+    {
+      "id": "ml-kem-kem",
+      "doc": "docs/side-channel-review.md",
+      "source_files": ["cpp/include/pqcore/kem.hpp", "cpp/include/pqcore/kem_internal.hpp"],
+      "review_status": "reviewed-internal-test-hook",
+      "public_inputs": ["encapsulation key", "ciphertext", "parameter set"],
+      "secret_inputs": ["decapsulation key", "PKE decryption key", "implicit-rejection seed", "candidate shared secret", "fallback shared secret"],
+      "secret_derived_intermediates": ["recovered message", "reencryption coins", "reencrypted ciphertext", "valid-ciphertext mask"],
+      "secret_dependent_branches": [
+        {
+          "description": "ciphertext equality controls shared-secret selection",
+          "status": "reviewed-internal-test-hook",
+          "resolution": "comparison accumulates a full-length diff and selection uses byte masks"
+        }
+      ],
+      "secret_dependent_memory_access": [
+        {
+          "description": "decapsulation key slices use fixed public offsets and shared-secret selection uses fixed 32-byte loops",
+          "status": "reviewed-internal-test-hook"
+        }
+      ],
+      "error_paths": [
+        {
+          "description": "malformed lengths throw; secret-dependent decapsulation failure returns fallback secret without a distinct error class",
+          "status": "reviewed-internal-test-hook"
+        }
+      ],
+      "side_channel_note": "Internal ML-KEM-512 decapsulation has reviewed fail-closed shape for the test hook. Production completion still requires real hashing, official vectors, optimized compiler-output review, and external cryptographic review."
+    },
+    {
+      "id": "ml-dsa-helpers",
+      "doc": "docs/side-channel-review.md",
+      "source_files": ["cpp/include/pqcore/dsa_helpers.hpp"],
+      "review_status": "not-production-reviewed",
+      "public_inputs": ["parameter set", "challenge seed bytes"],
+      "secret_inputs": ["low bits and hint inputs in full signing paths"],
+      "secret_derived_intermediates": ["decomposed coefficients", "hints", "challenge-dependent products"],
+      "secret_dependent_branches": [
+        {
+          "description": "decomposition and hint logic branch on coefficient values",
+          "status": "open-production-blocker"
+        }
+      ],
+      "secret_dependent_memory_access": [
+        {
+          "description": "current helper access is fixed-size; full signing usage needs review",
+          "status": "needs-final-review"
+        }
+      ],
+      "error_paths": [
+        {
+          "description": "parameter/domain errors are public-shape errors",
+          "status": "documented"
+        }
+      ],
+      "side_channel_note": "ML-DSA helper functions prove algebraic behavior. They are not production-reviewed for secret-bearing signing use."
+    },
+    {
+      "id": "ml-dsa-signature",
+      "doc": "docs/side-channel-review.md",
+      "source_files": ["cpp/include/pqcore/dsa.hpp", "cpp/include/pqcore/dsa_internal.hpp"],
+      "review_status": "reviewed-flow-harness-only",
+      "public_inputs": ["public key", "message", "context", "signature", "parameter set"],
+      "secret_inputs": ["secret key", "signing seed K", "signing randomness", "signing mask seed"],
+      "secret_derived_intermediates": ["message representative", "rho_second", "witness", "response vector", "hint vector"],
+      "secret_dependent_branches": [
+        {
+          "description": "signing rejection loop exits after acceptance",
+          "status": "reviewed-flow-harness-only",
+          "resolution": "current loop is deterministic fixture behavior and public signing remains fail-closed"
+        }
+      ],
+      "secret_dependent_memory_access": [
+        {
+          "description": "signature layout uses public sizes; production witness and hint access still need review",
+          "status": "needs-final-review"
+        }
+      ],
+      "error_paths": [
+        {
+          "description": "public malformed lengths throw before signing/verification implementation; internal verification returns false for malformed public inputs",
+          "status": "documented"
+        }
+      ],
+      "side_channel_note": "The ML-DSA signing path is a flow harness. Production signing is blocked on final algorithm implementation and rejection-loop side-channel review."
+    },
+    {
+      "id": "public-api-stubs",
+      "doc": "docs/side-channel-review.md",
+      "source_files": ["cpp/include/pqcore/kem.hpp", "cpp/include/pqcore/dsa.hpp"],
+      "review_status": "fail-closed",
+      "public_inputs": ["parameter set", "public key", "ciphertext", "message", "context", "signature"],
+      "secret_inputs": ["secret key byte strings provided to signing or decapsulation"],
+      "secret_derived_intermediates": ["none in current public stubs"],
+      "secret_dependent_branches": [
+        {
+          "description": "no production algorithm executes after length checks",
+          "status": "fail-closed"
+        }
+      ],
+      "secret_dependent_memory_access": [
+        {
+          "description": "public stubs do not inspect secret bytes beyond public length",
+          "status": "fail-closed"
+        }
+      ],
+      "error_paths": [
+        {
+          "description": "malformed public shapes throw; otherwise public algorithms throw NotImplemented",
+          "status": "fail-closed"
+        }
+      ],
+      "side_channel_note": "Public ML-KEM and ML-DSA APIs remain fail-closed, so no production secret-bearing public operation is exposed yet."
+    }
+  ],
+  "required_reviews": {
+    "ml_kem_decapsulation_failure_handling": {
+      "module_id": "ml-kem-kem",
+      "status": "reviewed-internal-test-hook",
+      "finding_id": "SC-KEM-DEC-001",
+      "production_blocker": true,
+      "note": "Well-sized corrupted ciphertext returns a fallback shared secret; no secret-dependent error class is exposed in the test hook."
+    },
+    "ml_dsa_signing_rejection_behavior": {
+      "module_id": "ml-dsa-signature",
+      "status": "reviewed-flow-harness-only",
+      "finding_id": "SC-DSA-SIGN-001",
+      "production_blocker": true,
+      "note": "The current rejection loop is a deterministic harness. Production signing remains blocked until the real loop is reviewed."
+    }
+  },
+  "findings": [
+    {
+      "id": "SC-KEM-DEC-001",
+      "module_id": "ml-kem-kem",
+      "title": "ML-KEM decapsulation failure handling is reviewed for the internal test hook only",
+      "status": "open-production-blocker",
+      "production_blocker": true,
+      "public_tracking": "issue #14"
+    },
+    {
+      "id": "SC-DSA-SIGN-001",
+      "module_id": "ml-dsa-signature",
+      "title": "ML-DSA signing rejection behavior is not production-reviewed",
+      "status": "open-production-blocker",
+      "production_blocker": true,
+      "public_tracking": "issue #14"
+    },
+    {
+      "id": "SC-SAMPLING-001",
+      "module_id": "sampling",
+      "title": "Secret-bearing sampler loops need final review with real SHAKE/XOF/PRF plumbing",
+      "status": "open-production-blocker",
+      "production_blocker": true,
+      "public_tracking": "issue #14"
+    },
+    {
+      "id": "SC-COMPILER-001",
+      "module_id": "field-polynomial-ntt",
+      "title": "Optimized compiler output is not reviewed for critical routines",
+      "status": "open-production-blocker",
+      "production_blocker": true,
+      "public_tracking": "issue #14"
+    }
+  ]
+}

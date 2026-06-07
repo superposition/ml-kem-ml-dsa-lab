@@ -24,6 +24,7 @@ This repository is designed as a derivation-first implementation lab. Production
 | ML-DSA rounding/hints/challenge | Yes | C++ + fixture | C++ helpers | Internal | Power2Round, Decompose, hints, and challenge construction exist |
 | ML-DSA keygen/sign/verify | Partial | C++ + fixture | Internal test hook | Internal | Signing-flow harness exists; public API fails closed until vectors land |
 | NIST ACVP vectors | Partial | Manifest + harness | Parser + pending gate | Internal | Official sources recorded; vector sets pending |
+| Side-channel review gate | Partial | Manifest + C++ redaction test | Review gate | Internal | Production status remains false; blockers are tracked |
 
 ## Repository Layout
 
@@ -49,6 +50,8 @@ python3 -m json.tool learning/ml-kem-fips203.track.json >/dev/null
 python3 -m json.tool learning/ml-dsa-fips204.track.json >/dev/null
 python3 -m json.tool fixtures/parameter-sets.json >/dev/null
 bash scripts/check-docs-glossary.sh
+python3 scripts/check-vector-manifest.py --self-test
+python3 scripts/check-side-channel-manifest.py --self-test
 bash scripts/check-rust-crate-gate.sh
 ```
 
@@ -86,6 +89,7 @@ This library must not be treated as production cryptography until the production
 - `docs/ml-dsa-rounding-hints.md` derives ML-DSA rounding, hints, and challenge construction.
 - `docs/ml-dsa-signature.md` derives the ML-DSA signature API contract and internal signing-flow boundary.
 - `docs/vector-ingestion.md` defines official vector provenance, pending behavior, and future differential tests.
+- `docs/side-channel-review.md` defines secret-bearing surfaces and the constant-time review gate.
 - `docs/fips-203-symbols.md` maps ML-KEM symbols and modules.
 - `docs/fips-204-symbols.md` maps ML-DSA symbols and modules.
 
