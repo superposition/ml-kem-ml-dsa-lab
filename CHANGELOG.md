@@ -12,4 +12,5 @@
 - Added source-linked parameter derivation, shared parameter fixture, and complete C++ parameter tests.
 - Added source-linked field-element derivation and complete C++ field tests for both moduli.
 - Added source-linked polynomial-ring derivation, shared polynomial fixture format, and complete C++ polynomial tests.
+- Added source-linked ML-KEM encoding/compression derivation, shared encoding fixtures, and C++ encoding tests.
 - Added agentic learning schema and production readiness gates.

@@ -16,6 +16,7 @@ This repository is designed as a derivation-first implementation lab. Production
 | Parameter metadata | Yes | C++ + fixture | C++ | Internal | Source-linked derivation and shared fixture exist |
 | Finite-field arithmetic | Yes | C++ | C++ | Internal | Source-linked derivation and arithmetic tests exist |
 | Polynomial arithmetic | Yes | C++ | C++ | Internal | Source-linked derivation and schoolbook oracle tests exist |
+| Encoding and compression | Yes | C++ + fixture | C++ | Internal | ML-KEM byte packing and compression derivation exist |
 | ML-KEM keygen/encap/decap | No | No | API only | No | C++ fails closed with `NotImplemented` |
 | ML-DSA keygen/sign/verify | No | No | API only | No | C++ fails closed with `NotImplemented` |
 | NIST ACVP vectors | No | No | No | No | Required before production claims |
@@ -73,6 +74,7 @@ This library must not be treated as production cryptography until the production
 - `docs/parameter-tables.md` derives the shared parameter metadata.
 - `docs/field-elements.md` derives canonical and centered field representation.
 - `docs/polynomial-ring.md` derives polynomial arithmetic over `R_q`.
+- `docs/encoding-and-compression.md` derives ML-KEM byte encoding and compression.
 - `docs/fips-203-symbols.md` maps ML-KEM symbols and modules.
 - `docs/fips-204-symbols.md` maps ML-DSA symbols and modules.
 

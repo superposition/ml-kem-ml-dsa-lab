@@ -1,0 +1,61 @@
+{
+  "source": {
+    "ml_kem": {
+      "standard": "FIPS 203",
+      "encoding_section": "Section 4.2.1",
+      "byte_encode_algorithm": "Algorithm 5",
+      "byte_decode_algorithm": "Algorithm 6",
+      "url": "https://csrc.nist.gov/pubs/fips/203/final"
+    },
+    "ml_dsa": {
+      "standard": "FIPS 204",
+      "encoding_section": "Section 7.2",
+      "url": "https://csrc.nist.gov/pubs/fips/204/final"
+    },
+    "status": "repository-owned derivation examples, not official NIST vectors"
+  },
+  "byte_encode_lengths": [
+    {"bit_width": 1, "bytes": 32},
+    {"bit_width": 4, "bytes": 128},
+    {"bit_width": 10, "bytes": 320},
+    {"bit_width": 11, "bytes": 352},
+    {"bit_width": 12, "bytes": 384}
+  ],
+  "ml_kem_lengths": [
+    {
+      "name": "ML-KEM-512",
+      "k": 2,
+      "du": 10,
+      "dv": 4,
+      "public_key_bytes": 800,
+      "ciphertext_bytes": 768
+    },
+    {
+      "name": "ML-KEM-768",
+      "k": 3,
+      "du": 10,
+      "dv": 4,
+      "public_key_bytes": 1184,
+      "ciphertext_bytes": 1088
+    },
+    {
+      "name": "ML-KEM-1024",
+      "k": 4,
+      "du": 11,
+      "dv": 5,
+      "public_key_bytes": 1568,
+      "ciphertext_bytes": 1568
+    }
+  ],
+  "compression_examples": [
+    {"q": 3329, "bit_width": 1, "input": 0, "compressed": 0},
+    {"q": 3329, "bit_width": 1, "input": 1664, "compressed": 1},
+    {"q": 3329, "bit_width": 1, "input": 3328, "compressed": 0},
+    {"q": 3329, "bit_width": 4, "input": 0, "compressed": 0},
+    {"q": 3329, "bit_width": 4, "input": 3328, "compressed": 0}
+  ],
+  "decompression_examples": [
+    {"q": 3329, "bit_width": 4, "compressed": 0, "decompressed": 0},
+    {"q": 3329, "bit_width": 4, "compressed": 15, "decompressed": 3121}
+  ]
+}
