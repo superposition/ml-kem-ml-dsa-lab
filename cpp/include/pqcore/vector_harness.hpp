@@ -30,6 +30,17 @@ struct VectorHarnessResult {
   std::string reason;
 };
 
+struct OfficialVectorCaseMetadata {
+  std::string_view id;
+  std::string_view scheme;
+  std::string_view mode;
+  std::string_view parameter_set;
+  int group_id;
+  int case_id;
+  bool has_prompt;
+  bool has_expected_results;
+};
+
 [[nodiscard]] constexpr std::optional<MlKemParameterSet> ml_kem_parameter_set_from_name(
     std::string_view name) noexcept {
   if (name == "ML-KEM-512") {
@@ -124,6 +135,44 @@ struct VectorHarnessResult {
   }
 
   return {VectorOutcome::Passed, "placeholder vector case executed"};
+}
+
+[[nodiscard]] constexpr bool known_official_mode(
+    std::string_view scheme,
+    std::string_view mode) noexcept {
+  if (scheme == "ML-KEM") {
+    return mode == "keyGen" || mode == "encapDecap";
+  }
+  if (scheme == "ML-DSA") {
+    return mode == "keyGen" || mode == "sigGen" || mode == "sigVer";
+  }
+  return false;
+}
+
+[[nodiscard]] inline VectorHarnessResult validate_official_vector_case_metadata(
+    const OfficialVectorCaseMetadata& test_case) {
+  if (test_case.id.empty()) {
+    throw std::invalid_argument{"official vector case id is empty"};
+  }
+  if (!known_official_mode(test_case.scheme, test_case.mode)) {
+    throw std::invalid_argument{"unknown official vector scheme or mode"};
+  }
+  if (test_case.scheme == "ML-KEM" &&
+      !ml_kem_parameter_set_from_name(test_case.parameter_set).has_value()) {
+    throw std::invalid_argument{"unknown ML-KEM parameter set in official vector case"};
+  }
+  if (test_case.scheme == "ML-DSA" &&
+      !ml_dsa_parameter_set_from_name(test_case.parameter_set).has_value()) {
+    throw std::invalid_argument{"unknown ML-DSA parameter set in official vector case"};
+  }
+  if (test_case.group_id <= 0 || test_case.case_id <= 0) {
+    throw std::invalid_argument{"official vector group and case ids must be positive"};
+  }
+  if (!test_case.has_prompt || !test_case.has_expected_results) {
+    throw std::invalid_argument{"official vector case must have prompt and expected results"};
+  }
+  return {VectorOutcome::Pending,
+          "official vector case metadata accepted; algorithm execution is pending"};
 }
 
 }  // namespace pqcore

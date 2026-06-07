@@ -49,6 +49,18 @@ def require_string(value: Any, context: str) -> str:
   return value
 
 
+def require_int(value: Any, context: str) -> int:
+  if not isinstance(value, int):
+    raise ManifestError(f"{context}: expected integer")
+  return value
+
+
+def require_bool(value: Any, context: str) -> bool:
+  if not isinstance(value, bool):
+    raise ManifestError(f"{context}: expected boolean")
+  return value
+
+
 def require_date(value: Any, context: str) -> str:
   text = require_string(value, context)
   if DATE.fullmatch(text) is None:
@@ -115,6 +127,137 @@ def validate_placeholder_file(path: Path, repo_root: Path) -> None:
     raise ManifestError(f"{path}: placeholder file must live inside repository root")
 
 
+def vector_set_digest(files: list[tuple[str, str, str]]) -> str:
+  digest = hashlib.sha256()
+  for role, file_name, file_hash in files:
+    digest.update(f"{role}\0{file_name}\0{file_hash}\n".encode("utf-8"))
+  return digest.hexdigest()
+
+
+def validate_acvp_json_file(
+    path: Path,
+    *,
+    scheme: str,
+    mode: str,
+    revision: str,
+    parameter_sets: list[str],
+    expected_sample: bool,
+    context: str,
+    require_group_parameter_sets: bool) -> tuple[int, int]:
+  data = require_object(load_json(path), str(path))
+  algorithm = require_string(data.get("algorithm"), f"{context}.algorithm")
+  if algorithm != scheme:
+    raise ManifestError(f"{context}.algorithm: expected {scheme}, got {algorithm}")
+  file_mode = require_string(data.get("mode"), f"{context}.mode")
+  if file_mode != mode:
+    raise ManifestError(f"{context}.mode: expected {mode}, got {file_mode}")
+  file_revision = require_string(data.get("revision"), f"{context}.revision")
+  if file_revision != revision:
+    raise ManifestError(f"{context}.revision: expected {revision}, got {file_revision}")
+  is_sample = require_bool(data.get("isSample"), f"{context}.isSample")
+  if is_sample != expected_sample:
+    raise ManifestError(f"{context}.isSample: expected {expected_sample}, got {is_sample}")
+
+  groups = require_array(data.get("testGroups"), f"{context}.testGroups")
+  if not groups:
+    raise ManifestError(f"{context}.testGroups: must contain at least one group")
+
+  allowed = set(parameter_sets)
+  seen_parameters: set[str] = set()
+  case_count = 0
+  for group_index, raw_group in enumerate(groups):
+    group = require_object(raw_group, f"{context}.testGroups[{group_index}]")
+    require_int(group.get("tgId"), f"{context}.testGroups[{group_index}].tgId")
+    if require_group_parameter_sets:
+      parameter_set = require_string(
+          group.get("parameterSet"), f"{context}.testGroups[{group_index}].parameterSet")
+      if parameter_set not in allowed:
+        raise ManifestError(
+            f"{context}.testGroups[{group_index}].parameterSet: unexpected {parameter_set}")
+      seen_parameters.add(parameter_set)
+    tests = require_array(group.get("tests"), f"{context}.testGroups[{group_index}].tests")
+    if not tests:
+      raise ManifestError(f"{context}.testGroups[{group_index}].tests: must not be empty")
+    for test_index, raw_test in enumerate(tests):
+      test = require_object(raw_test, f"{context}.testGroups[{group_index}].tests[{test_index}]")
+      require_int(
+          test.get("tcId"), f"{context}.testGroups[{group_index}].tests[{test_index}].tcId")
+    case_count += len(tests)
+
+  if require_group_parameter_sets and seen_parameters != allowed:
+    missing = ", ".join(sorted(allowed - seen_parameters))
+    raise ManifestError(f"{context}: missing parameter-set groups: {missing}")
+  return len(groups), case_count
+
+
+def validate_official_vector_set(
+    vector_set: dict[str, Any],
+    repo_root: Path,
+    *,
+    context: str,
+    scheme: str,
+    mode: str,
+    revision: str,
+    parameter_sets: list[str]) -> None:
+  expected_group_count = require_int(vector_set.get("group_count"), f"{context}.group_count")
+  expected_case_count = require_int(vector_set.get("case_count"), f"{context}.case_count")
+  expected_sample = require_bool(vector_set.get("is_sample"), f"{context}.is_sample")
+  files = require_array(vector_set.get("files"), f"{context}.files")
+  if len(files) != 2:
+    raise ManifestError(f"{context}.files: expected prompt and expectedResults files")
+
+  seen_roles: set[str] = set()
+  digest_entries: list[tuple[str, str, str]] = []
+  counts_by_role: dict[str, tuple[int, int]] = {}
+  for file_index, raw_file in enumerate(files):
+    file_entry = require_object(raw_file, f"{context}.files[{file_index}]")
+    role = require_string(file_entry.get("role"), f"{context}.files[{file_index}].role")
+    if role not in {"prompt", "expectedResults"}:
+      raise ManifestError(f"{context}.files[{file_index}].role: unsupported role {role}")
+    if role in seen_roles:
+      raise ManifestError(f"{context}.files[{file_index}].role: duplicate role {role}")
+    seen_roles.add(role)
+    require_string(file_entry.get("source_path"), f"{context}.files[{file_index}].source_path")
+    file_name = require_string(file_entry.get("file"), f"{context}.files[{file_index}].file")
+    expected_hash = require_sha256(
+        file_entry.get("sha256"), f"{context}.files[{file_index}].sha256")
+    vector_path = (repo_root / file_name).resolve()
+    if not vector_path.exists():
+      raise ManifestError(f"{file_name}: official vector file is missing")
+    if not vector_path.is_relative_to(repo_root):
+      raise ManifestError(f"{file_name}: official vector file must live inside repository root")
+    actual_hash = sha256_file(vector_path)
+    if actual_hash != expected_hash:
+      raise ManifestError(f"{file_name}: SHA-256 mismatch, expected {expected_hash}, got {actual_hash}")
+    digest_entries.append((role, file_name, expected_hash))
+    counts_by_role[role] = validate_acvp_json_file(
+        vector_path,
+        scheme=scheme,
+        mode=mode,
+        revision=revision,
+        parameter_sets=parameter_sets,
+        expected_sample=expected_sample,
+        context=f"{context}.files[{file_index}]",
+        require_group_parameter_sets=role == "prompt")
+
+  if seen_roles != {"prompt", "expectedResults"}:
+    raise ManifestError(f"{context}.files: expected prompt and expectedResults roles")
+  prompt_counts = counts_by_role["prompt"]
+  expected_counts = counts_by_role["expectedResults"]
+  if prompt_counts != expected_counts:
+    raise ManifestError(
+        f"{context}.files: prompt counts {prompt_counts} do not match expectedResults {expected_counts}")
+  if prompt_counts != (expected_group_count, expected_case_count):
+    raise ManifestError(
+        f"{context}: expected {expected_group_count} groups and {expected_case_count} cases, got {prompt_counts}")
+
+  expected_vector_hash = require_sha256(vector_set.get("sha256"), f"{context}.sha256")
+  actual_vector_hash = vector_set_digest(digest_entries)
+  if actual_vector_hash != expected_vector_hash:
+    raise ManifestError(
+        f"{context}.sha256: vector-set digest mismatch, expected {expected_vector_hash}, got {actual_vector_hash}")
+
+
 def validate_manifest(path: Path, require_official: bool = False) -> list[str]:
   repo_root = path.parent.parent if path.parent.name == "test-vectors" else Path.cwd()
   manifest = require_object(load_json(path), str(path))
@@ -148,7 +291,7 @@ def validate_manifest(path: Path, require_official: bool = False) -> list[str]:
     require_string(vector_set.get("hash_target"), f"vector_sets[{index}].hash_target")
     require_string(vector_set.get("mode"), f"vector_sets[{index}].mode")
     require_string(vector_set.get("revision"), f"vector_sets[{index}].revision")
-    validate_parameter_sets(
+    parameter_sets = validate_parameter_sets(
         vector_set.get("parameter_sets"), scheme, f"vector_sets[{index}].parameter_sets")
 
     if kind == "official-acvp":
@@ -160,6 +303,14 @@ def validate_manifest(path: Path, require_official: bool = False) -> list[str]:
             vector_set.get("pending_reason"), f"vector_sets[{index}].pending_reason")
         pending.append(f"{vector_id}: {reason}")
       elif status == "vendored":
+        validate_official_vector_set(
+            vector_set,
+            repo_root.resolve(),
+            context=f"vector_sets[{index}]",
+            scheme=scheme,
+            mode=vector_set["mode"],
+            revision=vector_set["revision"],
+            parameter_sets=parameter_sets)
         official_ready += 1
       else:
         raise ManifestError(f"vector_sets[{index}].status: unsupported official status")
@@ -234,6 +385,92 @@ def run_self_test() -> None:
         raise
     else:
       raise ManifestError("self-test expected strict official-vector gate rejection")
+
+    repo_root = Path(tmp) / "repo"
+    vector_dir = repo_root / "test-vectors" / "acvp" / "self-test"
+    vector_dir.mkdir(parents=True)
+    prompt = {
+        "vsId": 1,
+        "algorithm": "ML-KEM",
+        "mode": "keyGen",
+        "revision": "FIPS203",
+        "isSample": False,
+        "testGroups": [{
+            "tgId": 1,
+            "testType": "AFT",
+            "parameterSet": "ML-KEM-512",
+            "tests": [{"tcId": 1, "d": "00", "z": "00"}]
+        }]
+    }
+    expected = {
+        "vsId": 1,
+        "algorithm": "ML-KEM",
+        "mode": "keyGen",
+        "revision": "FIPS203",
+        "isSample": False,
+        "testGroups": [{
+            "tgId": 1,
+            "tests": [{"tcId": 1, "ek": "00", "dk": "00"}]
+        }]
+    }
+    prompt_path = vector_dir / "prompt.json"
+    expected_path = vector_dir / "expectedResults.json"
+    prompt_path.write_text(json.dumps(prompt), encoding="utf-8")
+    expected_path.write_text(json.dumps(expected), encoding="utf-8")
+    prompt_file = "test-vectors/acvp/self-test/prompt.json"
+    expected_file = "test-vectors/acvp/self-test/expectedResults.json"
+    prompt_hash = sha256_file(prompt_path)
+    expected_hash = sha256_file(expected_path)
+    official_manifest = repo_root / "test-vectors" / "manifest.json"
+    official_manifest.write_text(
+        json.dumps({
+            "schema_version": 1,
+            "retrieved_on": "2026-06-07",
+            "sources": [{
+                "id": "source",
+                "url": "https://example.invalid/source",
+                "retrieved_on": "2026-06-07",
+                "sha256": "0" * 64,
+                "hash_target": "self-test source"
+            }],
+            "vector_sets": [{
+                "id": "vendored-official",
+                "kind": "official-acvp",
+                "source_id": "source",
+                "source_url": "https://example.invalid/source",
+                "retrieved_on": "2026-06-07",
+                "sha256": vector_set_digest([
+                    ("prompt", prompt_file, prompt_hash),
+                    ("expectedResults", expected_file, expected_hash)
+                ]),
+                "hash_target": "self-test vector-set digest",
+                "standard": "FIPS 203",
+                "scheme": "ML-KEM",
+                "mode": "keyGen",
+                "revision": "FIPS203",
+                "parameter_sets": ["ML-KEM-512"],
+                "status": "vendored",
+                "is_sample": False,
+                "group_count": 1,
+                "case_count": 1,
+                "files": [
+                    {
+                        "role": "prompt",
+                        "file": prompt_file,
+                        "source_path": "self-test/prompt.json",
+                        "sha256": prompt_hash
+                    },
+                    {
+                        "role": "expectedResults",
+                        "file": expected_file,
+                        "source_path": "self-test/expectedResults.json",
+                        "sha256": expected_hash
+                    }
+                ]
+            }]
+        }),
+        encoding="utf-8")
+    validate_manifest(official_manifest, require_official=True)
 
 
 def main() -> int:
