@@ -92,6 +92,10 @@ if(PQCORE_BUILD_TESTS)
   target_link_libraries(test_dsa_public_policy PRIVATE pqcore)
   add_test(NAME test_dsa_public_policy COMMAND test_dsa_public_policy)
 
+  add_executable(test_vector_harness tests/test_vector_harness.cpp)
+  target_link_libraries(test_vector_harness PRIVATE pqcore)
+  add_test(NAME test_vector_harness COMMAND test_vector_harness)
+
   add_executable(test_polynomial tests/test_polynomial.cpp)
   target_link_libraries(test_polynomial PRIVATE pqcore)
   add_test(NAME test_polynomial COMMAND test_polynomial)

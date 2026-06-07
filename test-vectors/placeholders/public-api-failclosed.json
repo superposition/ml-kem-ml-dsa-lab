@@ -1,0 +1,37 @@
+{
+  "source": {
+    "kind": "repository-placeholder",
+    "status": "not official NIST ACVP vectors",
+    "purpose": "Exercise the vector harness while public ML-KEM and ML-DSA APIs remain fail-closed."
+  },
+  "cases": [
+    {
+      "id": "placeholder-ml-kem-512-keygen",
+      "scheme": "ML-KEM",
+      "operation": "keyGen",
+      "parameter_set": "ML-KEM-512",
+      "expected": "not_implemented"
+    },
+    {
+      "id": "placeholder-ml-kem-512-encap",
+      "scheme": "ML-KEM",
+      "operation": "encap",
+      "parameter_set": "ML-KEM-512",
+      "expected": "not_implemented"
+    },
+    {
+      "id": "placeholder-ml-dsa-44-sign",
+      "scheme": "ML-DSA",
+      "operation": "sign",
+      "parameter_set": "ML-DSA-44",
+      "expected": "not_implemented"
+    },
+    {
+      "id": "placeholder-ml-dsa-44-verify",
+      "scheme": "ML-DSA",
+      "operation": "verify",
+      "parameter_set": "ML-DSA-44",
+      "expected": "not_implemented"
+    }
+  ]
+}

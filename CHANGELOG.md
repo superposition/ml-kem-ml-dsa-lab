@@ -19,4 +19,5 @@
 - Added source-linked internal ML-KEM-512 KEM derivation, implicit-rejection tests, and public fail-closed contract.
 - Added source-linked ML-DSA rounding, hint, and challenge helper derivation with C++ tests.
 - Added source-linked ML-DSA signature-flow derivation, deterministic internal harness, and public fail-closed tests.
+- Added official-vector manifest validation, C++ placeholder vector harness, and Rust differential-test derivation notes.
 - Added agentic learning schema and production readiness gates.

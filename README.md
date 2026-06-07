@@ -23,7 +23,7 @@ This repository is designed as a derivation-first implementation lab. Production
 | ML-KEM keygen/encap/decap | Partial | C++ + fixture | Internal test hook | Internal | ML-KEM-512 internal KEM path exists; public API fails closed until vectors land |
 | ML-DSA rounding/hints/challenge | Yes | C++ + fixture | C++ helpers | Internal | Power2Round, Decompose, hints, and challenge construction exist |
 | ML-DSA keygen/sign/verify | Partial | C++ + fixture | Internal test hook | Internal | Signing-flow harness exists; public API fails closed until vectors land |
-| NIST ACVP vectors | No | No | No | No | Required before production claims |
+| NIST ACVP vectors | Partial | Manifest + harness | Parser + pending gate | Internal | Official sources recorded; vector sets pending |
 
 ## Repository Layout
 
@@ -85,6 +85,7 @@ This library must not be treated as production cryptography until the production
 - `docs/ml-kem-kem.md` derives the internal ML-KEM-512 KEM path and public fail-closed contract.
 - `docs/ml-dsa-rounding-hints.md` derives ML-DSA rounding, hints, and challenge construction.
 - `docs/ml-dsa-signature.md` derives the ML-DSA signature API contract and internal signing-flow boundary.
+- `docs/vector-ingestion.md` defines official vector provenance, pending behavior, and future differential tests.
 - `docs/fips-203-symbols.md` maps ML-KEM symbols and modules.
 - `docs/fips-204-symbols.md` maps ML-DSA symbols and modules.
 
