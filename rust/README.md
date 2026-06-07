@@ -14,7 +14,7 @@ The crate should be introduced only after the foundational derivation tickets ar
 
 ## Crate Creation Gate
 
-Do not add `Cargo.toml` or a public Rust API until these are documented:
+Do not add `Cargo.toml` or a public Rust API until the checklist in `../docs/rust-crate-gate.md` is satisfied. At minimum, these must be documented:
 
 - parameter tables and byte lengths,
 - field element semantics,
@@ -23,3 +23,4 @@ Do not add `Cargo.toml` or a public Rust API until these are documented:
 - vector ingestion strategy,
 - constant-time coding rules for secret-bearing operations.
 
+CI runs `scripts/check-rust-crate-gate.sh` and fails if a Rust `Cargo.toml` appears before the gate is intentionally opened.

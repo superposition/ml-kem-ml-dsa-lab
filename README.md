@@ -9,14 +9,16 @@ This repository is designed as a derivation-first implementation lab. Production
 
 ## Current Status
 
-| Area | Rust | C++ | Notes |
-| --- | --- | --- | --- |
-| Parameter metadata | Derivation planned | Implemented | ML-KEM-512/768/1024 and ML-DSA-44/65/87 |
-| Finite-field arithmetic | Derivation planned | Implemented | Modular arithmetic primitives with unit tests |
-| Polynomial arithmetic | Derivation planned | Implemented | Negacyclic schoolbook multiplication for baseline testing |
-| ML-KEM keygen/encap/decap | Not started | API only | C++ fails closed with `NotImplemented` |
-| ML-DSA keygen/sign/verify | Not started | API only | C++ fails closed with `NotImplemented` |
-| NIST ACVP vectors | Planned | Planned | Required before production claims |
+| Area | Derived | Tested | Implemented | Reviewed | Notes |
+| --- | --- | --- | --- | --- | --- |
+| Derivation-first process | Yes | Yes | Yes | Internal | CI blocks premature Rust crates |
+| Rust crate | No | No | No | No | Blocked by the Rust crate gate |
+| Parameter metadata | Partial | C++ | C++ | No | Needs source-linked derivation notes |
+| Finite-field arithmetic | Partial | C++ | C++ | No | Needs expanded derivation notes |
+| Polynomial arithmetic | Partial | C++ | C++ | No | Baseline negacyclic multiplication exists |
+| ML-KEM keygen/encap/decap | No | No | API only | No | C++ fails closed with `NotImplemented` |
+| ML-DSA keygen/sign/verify | No | No | API only | No | C++ fails closed with `NotImplemented` |
+| NIST ACVP vectors | No | No | No | No | Required before production claims |
 
 ## Repository Layout
 
@@ -39,6 +41,7 @@ ctest --test-dir build/cpp --output-on-failure
 python3 -m json.tool schemas/agentic-learning.schema.json >/dev/null
 python3 -m json.tool learning/ml-kem-fips203.track.json >/dev/null
 python3 -m json.tool learning/ml-dsa-fips204.track.json >/dev/null
+bash scripts/check-rust-crate-gate.sh
 ```
 
 Or run both:
@@ -67,3 +70,5 @@ This library must not be treated as production cryptography until the production
 ## Rust Policy
 
 There is intentionally no Rust crate yet. Rust should be derived through notes, red tests, and module-level invariants before a library surface is introduced.
+
+The crate-introduction checklist is tracked in `docs/rust-crate-gate.md`, and CI rejects accidental `rust/**/Cargo.toml` files until that gate is intentionally opened.

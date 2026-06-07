@@ -26,6 +26,14 @@ Every implementation ticket should include:
 - acceptance criteria,
 - readiness caveats.
 
+GitHub's derivation ticket template lives at:
+
+```text
+.github/ISSUE_TEMPLATE/derivation-ticket.md
+```
+
+Use it for new implementation slices so each issue remains both a project-management artifact and a teaching artifact.
+
 ## Why This Matters
 
 For cryptography, a compiling API can be actively misleading. A derivation-first workflow keeps the project honest by tying implementation claims to:
@@ -35,4 +43,3 @@ For cryptography, a compiling API can be actively misleading. A derivation-first
 - official vectors,
 - side-channel review,
 - reproducible tests.
-

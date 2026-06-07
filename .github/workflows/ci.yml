@@ -13,6 +13,12 @@ jobs:
       - run: python3 -m json.tool learning/ml-kem-fips203.track.json >/dev/null
       - run: python3 -m json.tool learning/ml-dsa-fips204.track.json >/dev/null
 
+  rust-crate-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: bash scripts/check-rust-crate-gate.sh
+
   cpp:
     runs-on: ubuntu-latest
     steps:
