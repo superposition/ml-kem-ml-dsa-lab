@@ -14,4 +14,5 @@
 - Added source-linked polynomial-ring derivation, shared polynomial fixture format, and complete C++ polynomial tests.
 - Added source-linked ML-KEM encoding/compression derivation, shared encoding fixtures, and C++ encoding tests.
 - Added source-linked ML-KEM NTT derivation, shared NTT fixtures, and C++ NTT oracle tests.
+- Added source-linked sampling derivation, isolated deterministic test hooks, and C++ sampling tests.
 - Added agentic learning schema and production readiness gates.

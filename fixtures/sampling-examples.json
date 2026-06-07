@@ -1,0 +1,57 @@
+{
+  "source": {
+    "ml_kem": {
+      "standard": "FIPS 203",
+      "sampling_section": "Section 4.2.2",
+      "prf_section": "Section 4.1",
+      "loop_bounds": "Appendix B Table 4",
+      "url": "https://csrc.nist.gov/pubs/fips/203/final"
+    },
+    "ml_dsa": {
+      "standard": "FIPS 204",
+      "sampling_section": "Section 7.3",
+      "coefficient_algorithms": "Algorithms 14 and 15",
+      "loop_bounds": "Appendix C Table 3",
+      "url": "https://csrc.nist.gov/pubs/fips/204/final"
+    },
+    "status": "repository-owned derivation examples, not official NIST vectors"
+  },
+  "deterministic_test_expand": {
+    "seed": "00..1f",
+    "domain": "fixture",
+    "nonce": 7,
+    "first_16_bytes": [240, 1, 28, 230, 209, 152, 45, 10, 114, 119, 225, 12, 124, 142, 167, 51],
+    "production_status": "test-only fixture generator, not SHAKE"
+  },
+  "ml_kem_prf_test": {
+    "eta": 2,
+    "nonce": 9,
+    "output_bytes": 128,
+    "first_16_bytes": [22, 65, 91, 184, 153, 86, 65, 243, 23, 180, 197, 11, 18, 58, 43, 10]
+  },
+  "ml_kem_xof_test": {
+    "seed": "00..1f || 01 || 02",
+    "output_bytes": 16,
+    "first_16_bytes": [41, 16, 175, 38, 6, 251, 119, 42, 193, 122, 196, 191, 20, 227, 211, 231]
+  },
+  "ml_kem_sample_ntt": {
+    "q": 3329,
+    "candidate_width_bits": 12,
+    "rejected_candidate_example": 4095
+  },
+  "ml_kem_sample_poly_cbd": [
+    {"eta": 2, "input_bytes": 128, "centered_bound": 2},
+    {"eta": 3, "input_bytes": 192, "centered_bound": 3}
+  ],
+  "ml_dsa_coefficients": {
+    "q": 8380417,
+    "coeff_from_three_bytes_rejects": 8388607,
+    "coeff_from_half_byte_eta2_rejects": 15,
+    "coeff_from_half_byte_eta4_rejects": 9
+  },
+  "ml_dsa_sample_in_ball": {
+    "tau_example": 4,
+    "weight": 4,
+    "coefficient_domain": [-1, 0, 1]
+  }
+}
