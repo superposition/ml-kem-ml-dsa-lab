@@ -1,0 +1,31 @@
+{
+  "source": {
+    "standard": "FIPS 203",
+    "section": "Section 5",
+    "algorithms": ["Algorithm 13", "Algorithm 14", "Algorithm 15"],
+    "url": "https://csrc.nist.gov/pubs/fips/203/final",
+    "status": "repository-owned deterministic test-hook examples, not official NIST vectors"
+  },
+  "ml_kem_512": {
+    "k": 2,
+    "eta1": 3,
+    "eta2": 2,
+    "du": 10,
+    "dv": 4,
+    "encryption_key_bytes": 800,
+    "decryption_key_bytes": 768,
+    "ciphertext_bytes": 768,
+    "matrix_shape": [2, 2],
+    "secret_vector_dimension": 2,
+    "error_vector_dimension": 2
+  },
+  "test_hook": {
+    "keygen_seed": "00..1f",
+    "coins": "ff..e0",
+    "message": "32 zero bytes",
+    "encryption_key_first_16_bytes": [34, 149, 121, 190, 36, 122, 162, 67, 133, 253, 161, 47, 111, 245, 35, 231],
+    "decryption_key_first_16_bytes": [185, 18, 12, 45, 182, 163, 105, 73, 31, 158, 201, 28, 119, 227, 51, 187],
+    "ciphertext_first_16_bytes": [145, 204, 62, 127, 46, 193, 123, 249, 140, 194, 32, 141, 118, 72, 150, 222],
+    "production_status": "requires PQCORE_ENABLE_TEST_SAMPLING; normal builds throw"
+  }
+}

@@ -19,6 +19,7 @@ This repository is designed as a derivation-first implementation lab. Production
 | Encoding and compression | Yes | C++ + fixture | C++ | Internal | ML-KEM byte packing and compression derivation exist |
 | NTT representation | Yes | C++ + fixture | C++ | Internal | ML-KEM NTT round trips and schoolbook oracle tests exist |
 | Sampling and deterministic hooks | Yes | C++ + fixture | C++ | Internal | Test-only expansion, rejection, and bounded samplers exist |
+| Internal ML-KEM PKE | Partial | C++ + fixture | C++ | Internal | ML-KEM-512 test-hook PKE layer exists |
 | ML-KEM keygen/encap/decap | No | No | API only | No | C++ fails closed with `NotImplemented` |
 | ML-DSA keygen/sign/verify | No | No | API only | No | C++ fails closed with `NotImplemented` |
 | NIST ACVP vectors | No | No | No | No | Required before production claims |
@@ -79,6 +80,7 @@ This library must not be treated as production cryptography until the production
 - `docs/encoding-and-compression.md` derives ML-KEM byte encoding and compression.
 - `docs/ntt.md` derives the ML-KEM NTT representation and oracle tests.
 - `docs/sampling.md` derives sampling boundaries and deterministic test hooks.
+- `docs/ml-kem-pke.md` derives the internal ML-KEM-512 PKE layer.
 - `docs/fips-203-symbols.md` maps ML-KEM symbols and modules.
 - `docs/fips-204-symbols.md` maps ML-DSA symbols and modules.
 

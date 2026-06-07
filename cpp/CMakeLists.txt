@@ -57,6 +57,15 @@ if(PQCORE_BUILD_TESTS)
   target_link_libraries(test_sampling_release_policy PRIVATE pqcore)
   add_test(NAME test_sampling_release_policy COMMAND test_sampling_release_policy)
 
+  add_executable(test_pke tests/test_pke.cpp)
+  target_link_libraries(test_pke PRIVATE pqcore)
+  target_compile_definitions(test_pke PRIVATE PQCORE_ENABLE_TEST_SAMPLING=1)
+  add_test(NAME test_pke COMMAND test_pke)
+
+  add_executable(test_pke_release_policy tests/test_pke_release_policy.cpp)
+  target_link_libraries(test_pke_release_policy PRIVATE pqcore)
+  add_test(NAME test_pke_release_policy COMMAND test_pke_release_policy)
+
   add_executable(test_polynomial tests/test_polynomial.cpp)
   target_link_libraries(test_polynomial PRIVATE pqcore)
   add_test(NAME test_polynomial COMMAND test_polynomial)
