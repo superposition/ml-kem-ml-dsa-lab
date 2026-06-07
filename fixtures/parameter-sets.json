@@ -1,0 +1,131 @@
+{
+  "source": {
+    "ml_kem": {
+      "standard": "FIPS 203",
+      "parameter_table": "Table 2",
+      "size_table": "Table 3",
+      "url": "https://csrc.nist.gov/pubs/fips/203/final"
+    },
+    "ml_dsa": {
+      "standard": "FIPS 204",
+      "parameter_table": "Table 1",
+      "size_table": "Table 2",
+      "url": "https://csrc.nist.gov/pubs/fips/204/final"
+    }
+  },
+  "ml_kem": [
+    {
+      "name": "ML-KEM-512",
+      "n": 256,
+      "q": 3329,
+      "k": 2,
+      "eta1": 3,
+      "eta2": 2,
+      "du": 10,
+      "dv": 4,
+      "rbg_strength_bits": 128,
+      "security_category": 1,
+      "public_key_bytes": 800,
+      "secret_key_bytes": 1632,
+      "ciphertext_bytes": 768,
+      "shared_secret_bytes": 32
+    },
+    {
+      "name": "ML-KEM-768",
+      "n": 256,
+      "q": 3329,
+      "k": 3,
+      "eta1": 2,
+      "eta2": 2,
+      "du": 10,
+      "dv": 4,
+      "rbg_strength_bits": 192,
+      "security_category": 3,
+      "public_key_bytes": 1184,
+      "secret_key_bytes": 2400,
+      "ciphertext_bytes": 1088,
+      "shared_secret_bytes": 32
+    },
+    {
+      "name": "ML-KEM-1024",
+      "n": 256,
+      "q": 3329,
+      "k": 4,
+      "eta1": 2,
+      "eta2": 2,
+      "du": 11,
+      "dv": 5,
+      "rbg_strength_bits": 256,
+      "security_category": 5,
+      "public_key_bytes": 1568,
+      "secret_key_bytes": 3168,
+      "ciphertext_bytes": 1568,
+      "shared_secret_bytes": 32
+    }
+  ],
+  "ml_dsa": [
+    {
+      "name": "ML-DSA-44",
+      "n": 256,
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda_bits": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80,
+      "challenge_entropy_bits": 192,
+      "security_category": 2,
+      "public_key_bytes": 1312,
+      "secret_key_bytes": 2560,
+      "signature_bytes": 2420
+    },
+    {
+      "name": "ML-DSA-65",
+      "n": 256,
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 49,
+      "lambda_bits": 192,
+      "gamma1": 524288,
+      "gamma2": 261888,
+      "k": 6,
+      "l": 5,
+      "eta": 4,
+      "beta": 196,
+      "omega": 55,
+      "challenge_entropy_bits": 225,
+      "security_category": 3,
+      "public_key_bytes": 1952,
+      "secret_key_bytes": 4032,
+      "signature_bytes": 3309
+    },
+    {
+      "name": "ML-DSA-87",
+      "n": 256,
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 60,
+      "lambda_bits": 256,
+      "gamma1": 524288,
+      "gamma2": 261888,
+      "k": 8,
+      "l": 7,
+      "eta": 2,
+      "beta": 120,
+      "omega": 75,
+      "challenge_entropy_bits": 257,
+      "security_category": 5,
+      "public_key_bytes": 2592,
+      "secret_key_bytes": 4896,
+      "signature_bytes": 4627
+    }
+  ]
+}

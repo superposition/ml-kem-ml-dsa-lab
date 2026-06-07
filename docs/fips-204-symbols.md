@@ -25,6 +25,8 @@ The NIST CSRC FIPS 204 page reports a final publication date of August 13, 2024 
 | `gamma1` | Signing mask and bound parameter | ML-DSA parameter table | Signing checks respect the bound |
 | `gamma2` | Decomposition and hint parameter | ML-DSA parameter table and rounding code | High/low-bit tests recombine correctly |
 | `omega` | Hint-count bound | ML-DSA parameter table and verifier | Signatures with too many hints are rejected |
+| `challenge entropy` | Informational challenge entropy value from the parameter table | ML-DSA parameter table | Values are 192, 225, and 257 bits |
+| `security category` | Claimed NIST security strength category | ML-DSA parameter table | Categories are 2, 3, and 5 |
 
 ## Repository Module Map
 

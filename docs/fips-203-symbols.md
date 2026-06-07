@@ -23,6 +23,8 @@ The NIST CSRC FIPS 203 page reports a final publication date of August 13, 2024 
 | `eta2` | Error/noise sampling parameter | ML-KEM parameter table and sampler | Sampler output satisfies the bound |
 | `du` | Ciphertext compression width for one component | ML-KEM parameter table and compression code | Ciphertext byte length matches parameter set |
 | `dv` | Ciphertext compression width for another component | ML-KEM parameter table and compression code | Ciphertext byte length matches parameter set |
+| `required RBG strength` | Required randomness-generation strength in bits | ML-KEM parameter table | Values are 128, 192, and 256 bits |
+| `security category` | Claimed NIST security strength category | ML-KEM parameter table | Categories are 1, 3, and 5 |
 
 ## Repository Module Map
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <string_view>
 
@@ -13,12 +14,15 @@ enum class MlKemParameterSet {
 
 struct MlKemParams {
   std::string_view name;
+  std::size_t polynomial_degree;
   std::size_t k;
   std::int32_t q;
   std::size_t eta1;
   std::size_t eta2;
   std::size_t du;
   std::size_t dv;
+  std::size_t rbg_strength_bits;
+  std::size_t security_category;
   std::size_t public_key_bytes;
   std::size_t secret_key_bytes;
   std::size_t ciphertext_bytes;
@@ -28,13 +32,16 @@ struct MlKemParams {
 [[nodiscard]] constexpr MlKemParams params(MlKemParameterSet set) noexcept {
   switch (set) {
     case MlKemParameterSet::MlKem512:
-      return {"ML-KEM-512", 2, 3329, 3, 2, 10, 4, 800, 1632, 768, 32};
+      return {
+          "ML-KEM-512", 256, 2, 3329, 3, 2, 10, 4, 128, 1, 800, 1632, 768, 32};
     case MlKemParameterSet::MlKem768:
-      return {"ML-KEM-768", 3, 3329, 2, 2, 10, 4, 1184, 2400, 1088, 32};
+      return {
+          "ML-KEM-768", 256, 3, 3329, 2, 2, 10, 4, 192, 3, 1184, 2400, 1088, 32};
     case MlKemParameterSet::MlKem1024:
-      return {"ML-KEM-1024", 4, 3329, 2, 2, 11, 5, 1568, 3168, 1568, 32};
+      return {
+          "ML-KEM-1024", 256, 4, 3329, 2, 2, 11, 5, 256, 5, 1568, 3168, 1568, 32};
   }
-  return {"invalid", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  return {"invalid", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 }
 
 enum class MlDsaParameterSet {
@@ -45,9 +52,11 @@ enum class MlDsaParameterSet {
 
 struct MlDsaParams {
   std::string_view name;
+  std::size_t polynomial_degree;
   std::size_t k;
   std::size_t l;
   std::int32_t q;
+  std::int32_t zeta;
   std::size_t d;
   std::size_t tau;
   std::size_t lambda_bits;
@@ -56,6 +65,8 @@ struct MlDsaParams {
   std::size_t eta;
   std::size_t beta;
   std::size_t omega;
+  std::size_t challenge_entropy_bits;
+  std::size_t security_category;
   std::size_t public_key_bytes;
   std::size_t secret_key_bytes;
   std::size_t signature_bytes;
@@ -64,14 +75,67 @@ struct MlDsaParams {
 [[nodiscard]] constexpr MlDsaParams params(MlDsaParameterSet set) noexcept {
   switch (set) {
     case MlDsaParameterSet::MlDsa44:
-      return {"ML-DSA-44", 4, 4, 8380417, 13, 39, 128, 1 << 17, (8380417 - 1) / 88, 2, 78, 80, 1312, 2560, 2420};
+      return {"ML-DSA-44",
+              256,
+              4,
+              4,
+              8380417,
+              1753,
+              13,
+              39,
+              128,
+              1 << 17,
+              (8380417 - 1) / 88,
+              2,
+              78,
+              80,
+              192,
+              2,
+              1312,
+              2560,
+              2420};
     case MlDsaParameterSet::MlDsa65:
-      return {"ML-DSA-65", 6, 5, 8380417, 13, 49, 192, 1 << 19, (8380417 - 1) / 32, 4, 196, 55, 1952, 4032, 3309};
+      return {"ML-DSA-65",
+              256,
+              6,
+              5,
+              8380417,
+              1753,
+              13,
+              49,
+              192,
+              1 << 19,
+              (8380417 - 1) / 32,
+              4,
+              196,
+              55,
+              225,
+              3,
+              1952,
+              4032,
+              3309};
     case MlDsaParameterSet::MlDsa87:
-      return {"ML-DSA-87", 8, 7, 8380417, 13, 60, 256, 1 << 19, (8380417 - 1) / 32, 2, 120, 75, 2592, 4896, 4627};
+      return {"ML-DSA-87",
+              256,
+              8,
+              7,
+              8380417,
+              1753,
+              13,
+              60,
+              256,
+              1 << 19,
+              (8380417 - 1) / 32,
+              2,
+              120,
+              75,
+              257,
+              5,
+              2592,
+              4896,
+              4627};
   }
-  return {"invalid", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  return {"invalid", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 }
 
 }  // namespace pqcore
-

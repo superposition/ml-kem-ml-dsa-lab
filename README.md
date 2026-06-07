@@ -13,7 +13,7 @@ This repository is designed as a derivation-first implementation lab. Production
 | --- | --- | --- | --- | --- | --- |
 | Derivation-first process | Yes | Yes | Yes | Internal | CI blocks premature Rust crates |
 | Rust crate | No | No | No | No | Blocked by the Rust crate gate |
-| Parameter metadata | Partial | C++ | C++ | No | Needs source-linked derivation notes |
+| Parameter metadata | Yes | C++ + fixture | C++ | Internal | Source-linked derivation and shared fixture exist |
 | Finite-field arithmetic | Partial | C++ | C++ | No | Needs expanded derivation notes |
 | Polynomial arithmetic | Partial | C++ | C++ | No | Baseline negacyclic multiplication exists |
 | ML-KEM keygen/encap/decap | No | No | API only | No | C++ fails closed with `NotImplemented` |
@@ -27,6 +27,7 @@ This repository is designed as a derivation-first implementation lab. Production
 ├── cpp/                         # C++20 header-first library and CTest suite
 ├── rust/                        # Rust derivation track; no crate yet
 ├── docs/                        # Standards map, implementation roadmap, readiness gates
+├── fixtures/                    # Repository-owned shared test fixtures
 ├── schemas/                     # Agentic learning trace schema
 ├── learning/                    # Initial learning tracks for ML-KEM and ML-DSA
 └── test-vectors/                # Placeholder for ACVP/KAT vector ingestion
@@ -41,6 +42,8 @@ ctest --test-dir build/cpp --output-on-failure
 python3 -m json.tool schemas/agentic-learning.schema.json >/dev/null
 python3 -m json.tool learning/ml-kem-fips203.track.json >/dev/null
 python3 -m json.tool learning/ml-dsa-fips204.track.json >/dev/null
+python3 -m json.tool fixtures/parameter-sets.json >/dev/null
+bash scripts/check-docs-glossary.sh
 bash scripts/check-rust-crate-gate.sh
 ```
 
@@ -67,6 +70,7 @@ This library must not be treated as production cryptography until the production
 - FIPS 204: Module-Lattice-Based Digital Signature Standard.
 - NIST ACVP vector generation/validation data is the planned test-vector source.
 - `docs/glossary.md` explains shared notation before implementation work.
+- `docs/parameter-tables.md` derives the shared parameter metadata.
 - `docs/fips-203-symbols.md` maps ML-KEM symbols and modules.
 - `docs/fips-204-symbols.md` maps ML-DSA symbols and modules.
 

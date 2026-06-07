@@ -11,6 +11,7 @@ validate-json:
 	python3 -m json.tool schemas/agentic-learning.schema.json >/dev/null
 	python3 -m json.tool learning/ml-kem-fips203.track.json >/dev/null
 	python3 -m json.tool learning/ml-dsa-fips204.track.json >/dev/null
+	python3 -m json.tool fixtures/parameter-sets.json >/dev/null
 
 validate-docs:
 	bash scripts/check-docs-glossary.sh
