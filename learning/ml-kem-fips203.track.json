@@ -12,9 +12,9 @@
   ],
   "tests": [
     {
-      "name": "ml_kem_api_fails_closed_until_implemented",
+      "name": "rust_derivation_crate_gate",
       "language": "rust",
-      "expected_signal": "KEM operations return NotImplemented rather than toy cryptography"
+      "expected_signal": "No Rust crate is introduced until the field, polynomial, encoding, vector, and constant-time derivation gates are documented"
     },
     {
       "name": "api_surface_fails_closed_until_implemented",
@@ -25,7 +25,7 @@
   "implementation_status": "green",
   "readiness_gate": "spec-coverage",
   "agent_notes": [
-    "The first green state proves API shape and fail-closed behavior only."
+    "The Rust track is derivation-first and intentionally has no crate yet.",
+    "The C++ green state proves API shape and fail-closed behavior only."
   ]
 }
-

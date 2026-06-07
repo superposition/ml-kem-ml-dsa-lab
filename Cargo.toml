@@ -1,4 +1,0 @@
-[workspace]
-members = ["rust/pqcore"]
-resolver = "2"
-

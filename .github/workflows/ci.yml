@@ -5,12 +5,13 @@ on:
   pull_request:
 
 jobs:
-  rust:
+  learning-json:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: dtolnay/rust-toolchain@stable
-      - run: cargo test --workspace
+      - run: python3 -m json.tool schemas/agentic-learning.schema.json >/dev/null
+      - run: python3 -m json.tool learning/ml-kem-fips203.track.json >/dev/null
+      - run: python3 -m json.tool learning/ml-dsa-fips204.track.json >/dev/null
 
   cpp:
     runs-on: ubuntu-latest
