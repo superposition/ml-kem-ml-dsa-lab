@@ -14,11 +14,12 @@ jobs:
       - run: python3 -m json.tool learning/ml-dsa-fips204.track.json >/dev/null
       - run: python3 -m json.tool fixtures/parameter-sets.json >/dev/null
 
-  rust-crate-gate:
+  rust:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - run: bash scripts/check-rust-crate-gate.sh
+      - run: cargo test --manifest-path rust/pqcore/Cargo.toml
 
   docs:
     runs-on: ubuntu-latest

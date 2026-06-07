@@ -5,7 +5,7 @@
     "official_vectors_status": "pending",
     "repository_fixtures_are_official": false,
     "missing_official_vectors_behavior": "report pending reason; do not treat absent vectors as a conformance pass",
-    "rust_differential_status": "blocked until rust crate gate issue #15 closes"
+    "rust_differential_status": "initial Rust crate exists; differential runner pending official vectors and public algorithm implementations"
   },
   "sources": [
     {
@@ -129,8 +129,8 @@
   ],
   "differential_tests": {
     "cpp_status": "placeholder harness active",
-    "rust_status": "blocked by docs/rust-crate-gate.md and issue #15",
-    "planned_comparison": "Run the same official vector set through C++ and Rust implementations after the Rust crate gate closes.",
+    "rust_status": "initial derivation crate active; vector runner pending",
+    "planned_comparison": "Run the same official vector set through C++ and Rust implementations after official vectors and public algorithms exist.",
     "planned_ci_job": "vector-tests"
   }
 }

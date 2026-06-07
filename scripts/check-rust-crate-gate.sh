@@ -2,18 +2,36 @@
 set -euo pipefail
 
 crate_files="$(find rust -type f -name Cargo.toml -print)"
+expected_crate="rust/pqcore/Cargo.toml"
 
-if [[ -n "$crate_files" ]]; then
+if [[ "$crate_files" != "$expected_crate" ]]; then
   cat >&2 <<EOF
-Rust crate gate is closed.
+Rust crate gate is open only for the intentional issue #15 crate.
 
-Do not add a Rust Cargo.toml until the crate-introduction gate is intentionally
-opened through issue #15. Found:
+Expected exactly:
 
-$crate_files
+$expected_crate
+
+Found:
+
+${crate_files:-<none>}
 EOF
   exit 1
 fi
 
-echo "Rust crate gate is closed and no Rust Cargo.toml files were found."
+if ! grep -q "publish = false" "$expected_crate"; then
+  echo "Rust crate must remain publish = false until a release policy exists." >&2
+  exit 1
+fi
 
+if ! grep -qi "not production cryptography" rust/pqcore/README.md; then
+  echo "Rust crate README must state that the crate is not production cryptography." >&2
+  exit 1
+fi
+
+if grep -R -nE "^[[:space:]]*pub[[:space:]]+(mod|fn)[[:space:]]+ml_(kem|dsa)" rust/pqcore/src; then
+  echo "Rust crate must not expose public ML-KEM or ML-DSA API stubs yet." >&2
+  exit 1
+fi
+
+echo "Rust crate gate is open for issue #15 and the internal crate shape is validated."

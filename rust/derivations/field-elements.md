@@ -1,8 +1,10 @@
 # Rust Derivation: Field Elements
 
-There is intentionally no Rust crate for this work yet.
+The initial Rust crate includes internal field-element derivation code at
+`rust/pqcore/src/field.rs`.
 
-The future Rust implementation should derive field elements from `docs/field-elements.md`, FIPS 203 Table 2, and FIPS 204 Table 1.
+The Rust implementation derives field elements from `docs/field-elements.md`, FIPS 203 Table 2, and
+FIPS 204 Table 1.
 
 ## Future Type Shape
 
@@ -49,4 +51,3 @@ Rust memory safety does not imply constant-time arithmetic. Once the field type 
 ## Readiness Caveat
 
 Field arithmetic is foundational metadata and representation work. It does not implement ML-KEM or ML-DSA.
-

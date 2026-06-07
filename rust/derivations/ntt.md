@@ -1,6 +1,6 @@
 # Rust Derivation: NTT
 
-There is intentionally no Rust crate for this work yet.
+The initial Rust crate exists, but this module remains future derivation work.
 
 The future Rust implementation should derive NTT behavior from `docs/ntt.md` and the shared fixture at `fixtures/ntt-examples.json`.
 
@@ -36,4 +36,3 @@ Future ML-DSA NTT work should use FIPS 204 Sections 7.5 and 7.6, the ML-DSA modu
 ## Readiness Caveat
 
 NTT tests prove functional representation behavior only. Secret-bearing NTT paths still need constant-time and side-channel review.
-

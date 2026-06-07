@@ -1,8 +1,10 @@
 # Rust Derivation: Parameter Tables
 
-There is intentionally no Rust crate for this work yet.
+The initial Rust crate includes internal parameter-table derivation code at
+`rust/pqcore/src/params.rs`.
 
-The future Rust implementation should derive parameter tables from `docs/parameter-tables.md` and the shared fixture at `fixtures/parameter-sets.json`.
+The Rust implementation derives parameter tables from `docs/parameter-tables.md` and the shared
+fixture at `fixtures/parameter-sets.json`.
 
 ## Future Type Shape
 
@@ -66,4 +68,3 @@ They should not be interchangeable. A future ML-KEM API should not accept an ML-
 ## Readiness Caveat
 
 Parameter tables are metadata. Correct metadata is required for vector tests, but it does not implement ML-KEM or ML-DSA.
-

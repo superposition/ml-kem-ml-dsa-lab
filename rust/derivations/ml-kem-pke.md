@@ -1,6 +1,6 @@
 # Rust Derivation: ML-KEM Internal PKE
 
-There is intentionally no Rust crate for this work yet.
+The initial Rust crate exists, but this module remains future derivation work.
 
 The future Rust implementation should derive internal K-PKE behavior from `docs/ml-kem-pke.md` and `fixtures/ml-kem-pke-examples.json`.
 
@@ -35,4 +35,3 @@ The `_test` path should depend on test-only deterministic expansion until real S
 ## Readiness Caveat
 
 Internal K-PKE test fixtures are not public ML-KEM vectors. Production readiness still requires FIPS-compatible SHAKE/XOF/PRF, official vectors, the outer KEM transform, entropy review, and constant-time review.
-

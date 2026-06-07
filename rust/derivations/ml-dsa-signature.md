@@ -1,6 +1,6 @@
 # Rust Derivation: ML-DSA Key Generation, Signing, and Verification
 
-There is intentionally no Rust crate for this work yet.
+The initial Rust crate exists, but this module remains future derivation work.
 
 The future Rust implementation should derive the signature API from `docs/ml-dsa-signature.md` and
 `fixtures/ml-dsa-signature-examples.json`.
@@ -50,7 +50,7 @@ fail-closed.
 17. Internal verification rejects response-bound failures.
 18. Internal verification rejects too many hints.
 19. Normal builds cannot call deterministic internal signature hooks accidentally.
-20. No Rust crate is introduced until the crate gate is intentionally opened.
+20. No public Rust signature API is introduced until the module is derived and tested.
 
 ## Readiness Caveat
 

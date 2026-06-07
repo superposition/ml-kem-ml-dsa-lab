@@ -1,12 +1,28 @@
 # Rust Crate Gate
 
-There is intentionally no Rust crate in this repository yet.
+The initial Rust crate now lives at:
 
-The Rust implementation should be derived before it is packaged. A crate can be introduced only after the foundational module boundaries, invariants, and tests are clear enough that the public API is a result of understanding rather than a substitute for it.
+```text
+rust/pqcore
+```
+
+It is an internal derivation crate, not a production cryptography crate. It exposes no public ML-KEM or
+ML-DSA algorithm API.
+
+The Rust implementation should be derived before it is packaged. The crate is allowed only because the
+foundational module boundaries, invariants, and tests are clear enough that the package shape follows
+the derivations rather than replacing them.
 
 ## Current Rule
 
-Until issue #15 is intentionally completed, CI must fail if `rust/**/Cargo.toml` appears.
+After issue #15, CI must fail unless exactly one crate manifest exists:
+
+```text
+rust/pqcore/Cargo.toml
+```
+
+The crate must remain `publish = false`, its README must avoid production claims, and it must not expose
+public ML-KEM or ML-DSA API stubs.
 
 The guard lives in:
 
@@ -16,27 +32,27 @@ scripts/check-rust-crate-gate.sh
 
 ## Crate Introduction Checklist
 
-Before adding a Rust `Cargo.toml`, complete and link evidence for:
+Evidence for the issue #15 crate opening:
 
-- parameter table derivation and tests,
-- field element derivation and tests,
-- polynomial ring derivation and tests,
-- encoding and decoding rules,
-- vector ingestion strategy,
-- secret-bearing type policy,
-- constant-time coding rules,
-- cross-language fixture format,
-- public API naming policy that uses ML-KEM and ML-DSA.
+- parameter table derivation and tests: `docs/parameter-tables.md`, `rust/pqcore/src/params.rs`,
+- field element derivation and tests: `docs/field-elements.md`, `rust/pqcore/src/field.rs`,
+- polynomial ring derivation and tests: `docs/polynomial-ring.md`, `rust/pqcore/src/polynomial.rs`,
+- encoding and decoding rules: `docs/encoding-and-compression.md`,
+- vector ingestion strategy: `docs/vector-ingestion.md`, `test-vectors/manifest.json`,
+- secret-bearing type policy: `docs/side-channel-review.md`,
+- constant-time coding rules: `audits/side-channel/manifest.json`,
+- cross-language fixture format: `fixtures/parameter-sets.json`, `fixtures/polynomial-examples.json`,
+- public API naming policy that uses ML-KEM and ML-DSA: `docs/fips-203-symbols.md`, `docs/fips-204-symbols.md`.
 
-## Unblocking Protocol
+## Future Public API Protocol
 
-1. Complete the derivation tickets that define the Rust module boundaries.
-2. Update this document with links to the evidence.
-3. Open a PR or commit that explicitly references issue #15.
-4. Remove or revise the crate-gate check in the same change that introduces the first Rust crate.
-5. Add Rust CI only after the first crate has real derivation tests.
+1. Keep new modules private until their derivation tests exist.
+2. Add shared fixture or official-vector evidence before exporting behavior.
+3. Preserve ML-KEM and ML-DSA names in public APIs; do not expose Kyber/Dilithium-only names.
+4. Keep production status false until official vectors, side-channel review, entropy review, fuzzing,
+   and external review are complete.
+5. Update the crate-shape guard in the same change that intentionally broadens the public surface.
 
 ## Teaching Note
 
 Rust improves memory safety, but it does not prove cryptographic correctness. The crate gate keeps the project focused on algebra, standard conformance, test vectors, and side-channel discipline before packaging.
-

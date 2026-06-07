@@ -1,8 +1,10 @@
 # Rust Derivation: Polynomial Ring
 
-There is intentionally no Rust crate for this work yet.
+The initial Rust crate includes internal polynomial-ring derivation code at
+`rust/pqcore/src/polynomial.rs`.
 
-The future Rust implementation should derive polynomial arithmetic from `docs/polynomial-ring.md` and the shared fixture at `fixtures/polynomial-examples.json`.
+The Rust implementation derives polynomial arithmetic from `docs/polynomial-ring.md` and the shared
+fixture at `fixtures/polynomial-examples.json`.
 
 ## Future Type Shape
 
@@ -51,4 +53,3 @@ Rust memory safety does not imply constant-time polynomial arithmetic. Once poly
 ## Readiness Caveat
 
 Schoolbook polynomial arithmetic is a correctness oracle. It does not implement ML-KEM or ML-DSA by itself, and it is not the final performance path.
-

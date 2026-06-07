@@ -1,6 +1,12 @@
 # Rust Derivation Track
 
-There is intentionally no Rust library crate here yet.
+The initial internal Rust crate lives at:
+
+```text
+rust/pqcore
+```
+
+It is not production cryptography and exposes no public ML-KEM or ML-DSA algorithm API yet.
 
 The Rust implementation should be derived module by module from:
 
@@ -10,17 +16,18 @@ The Rust implementation should be derived module by module from:
 4. a minimal green implementation,
 5. cross-language agreement with the C++ derivation once both sides exist.
 
-The crate should be introduced only after the foundational derivation tickets are complete. That keeps the project from pretending that API shape is the same thing as cryptographic understanding.
+The crate was introduced only after the foundational derivation tickets established module boundaries.
+That keeps the project from pretending that API shape is the same thing as cryptographic
+understanding.
 
 ## Crate Creation Gate
 
-Do not add `Cargo.toml` or a public Rust API until the checklist in `../docs/rust-crate-gate.md` is satisfied. At minimum, these must be documented:
+Do not add another `Cargo.toml` or a public Rust API without updating the checklist in
+`../docs/rust-crate-gate.md`. The current crate shape is limited to derivation tests for:
 
 - parameter tables and byte lengths,
 - field element semantics,
 - polynomial ring semantics,
-- encoding and decoding rules,
-- vector ingestion strategy,
-- constant-time coding rules for secret-bearing operations.
+- shared repository fixture links.
 
-CI runs `scripts/check-rust-crate-gate.sh` and fails if a Rust `Cargo.toml` appears before the gate is intentionally opened.
+CI runs `scripts/check-rust-crate-gate.sh` and `cargo test --manifest-path rust/pqcore/Cargo.toml`.

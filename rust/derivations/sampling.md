@@ -1,6 +1,6 @@
 # Rust Derivation: Sampling
 
-There is intentionally no Rust crate for this work yet.
+The initial Rust crate exists, but this module remains future derivation work.
 
 The future Rust implementation should derive sampling from `docs/sampling.md` and the shared fixture at `fixtures/sampling-examples.json`.
 
@@ -38,4 +38,3 @@ Rust memory safety does not make sampling safe. The final implementation still n
 ## Readiness Caveat
 
 Distribution sanity checks are not proof of correct sampling. The implementation must follow the standard algorithms and pass official vector coverage before production claims.
-

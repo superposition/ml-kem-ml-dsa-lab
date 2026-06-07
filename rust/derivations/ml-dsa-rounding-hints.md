@@ -1,6 +1,6 @@
 # Rust Derivation: ML-DSA Rounding, Hints, and Challenge
 
-There is intentionally no Rust crate for this work yet.
+The initial Rust crate exists, but this module remains future derivation work.
 
 The future Rust implementation should derive these helpers from
 `docs/ml-dsa-rounding-hints.md` and `fixtures/ml-dsa-helper-examples.json`.

@@ -1,6 +1,6 @@
 # Rust Derivation: ML-KEM KEM
 
-There is intentionally no Rust crate for this work yet.
+The initial Rust crate exists, but this module remains future derivation work.
 
 The future Rust implementation should derive KEM behavior from `docs/ml-kem-kem.md` and
 `fixtures/ml-kem-kem-examples.json`.

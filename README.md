@@ -11,8 +11,8 @@ This repository is designed as a derivation-first implementation lab. Production
 
 | Area | Derived | Tested | Implemented | Reviewed | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Derivation-first process | Yes | Yes | Yes | Internal | CI blocks premature Rust crates |
-| Rust crate | No | No | No | No | Blocked by the Rust crate gate |
+| Derivation-first process | Yes | Yes | Yes | Internal | CI validates the intentional internal Rust crate shape |
+| Rust crate | Partial | Cargo test | Internal derivation crate | Internal | No public ML-KEM/ML-DSA API; not production cryptography |
 | Parameter metadata | Yes | C++ + fixture | C++ | Internal | Source-linked derivation and shared fixture exist |
 | Finite-field arithmetic | Yes | C++ | C++ | Internal | Source-linked derivation and arithmetic tests exist |
 | Polynomial arithmetic | Yes | C++ | C++ | Internal | Source-linked derivation and schoolbook oracle tests exist |
@@ -31,7 +31,7 @@ This repository is designed as a derivation-first implementation lab. Production
 ```text
 .
 ├── cpp/                         # C++20 header-first library and CTest suite
-├── rust/                        # Rust derivation track; no crate yet
+├── rust/                        # Rust derivation track plus internal pqcore crate
 ├── docs/                        # Standards map, implementation roadmap, readiness gates
 ├── fixtures/                    # Repository-owned shared test fixtures
 ├── schemas/                     # Agentic learning trace schema
@@ -45,6 +45,7 @@ This repository is designed as a derivation-first implementation lab. Production
 cmake -S cpp -B build/cpp -DPQCORE_BUILD_TESTS=ON
 cmake --build build/cpp
 ctest --test-dir build/cpp --output-on-failure
+cargo test --manifest-path rust/pqcore/Cargo.toml
 python3 -m json.tool schemas/agentic-learning.schema.json >/dev/null
 python3 -m json.tool learning/ml-kem-fips203.track.json >/dev/null
 python3 -m json.tool learning/ml-dsa-fips204.track.json >/dev/null
@@ -95,6 +96,9 @@ This library must not be treated as production cryptography until the production
 
 ## Rust Policy
 
-There is intentionally no Rust crate yet. Rust should be derived through notes, red tests, and module-level invariants before a library surface is introduced.
+The initial Rust crate lives at `rust/pqcore`. It is an internal derivation crate with private modules
+for parameter tables, field elements, and polynomial arithmetic. It intentionally exposes no public
+ML-KEM or ML-DSA algorithm API.
 
-The crate-introduction checklist is tracked in `docs/rust-crate-gate.md`, and CI rejects accidental `rust/**/Cargo.toml` files until that gate is intentionally opened.
+The crate-introduction checklist is tracked in `docs/rust-crate-gate.md`, and CI rejects extra or
+public-facing Rust crate surfaces that bypass the issue #15 boundary.

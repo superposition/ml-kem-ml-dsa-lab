@@ -1,6 +1,6 @@
 # Rust Derivation: Official Vector Ingestion and Differential Testing
 
-There is intentionally no Rust crate for this work yet.
+The initial Rust crate exists, but this module remains future derivation work.
 
 The future Rust vector runner should derive its inputs from `docs/vector-ingestion.md` and
 `test-vectors/manifest.json`.
@@ -36,7 +36,7 @@ metadata.
 9. C++ and Rust outputs match official expected outputs.
 10. C++ and Rust outputs match each other.
 11. Failure reports include scheme, mode, parameter set, vector-set id, group id, and test-case id.
-12. No Rust crate is introduced until issue #15 intentionally opens the crate gate.
+12. No Rust vector runner is introduced until official vectors and public algorithms exist.
 
 ## Readiness Caveat
 

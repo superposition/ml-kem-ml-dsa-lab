@@ -1,0 +1,10 @@
+[package]
+name = "pqcore"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+publish = false
+description = "Derivation-first ML-KEM and ML-DSA lab crate; not production cryptography."
+
+[lib]
+path = "src/lib.rs"

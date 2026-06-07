@@ -1,6 +1,6 @@
 # Rust Derivation: Encoding And Compression
 
-There is intentionally no Rust crate for this work yet.
+The initial Rust crate exists, but this module remains future derivation work.
 
 The future Rust implementation should derive encoding from `docs/encoding-and-compression.md` and the shared fixture at `fixtures/encoding-examples.json`.
 
@@ -45,4 +45,3 @@ The future Rust vector loader should keep official ACVP/KAT data separate from r
 ## Readiness Caveat
 
 Correct byte packing is necessary for standards compatibility, but decoders still need fuzzing and side-channel review before production use.
-

@@ -1,11 +1,14 @@
-.PHONY: test cpp-test validate-json validate-docs validate-vectors validate-side-channel rust-crate-gate clean
+.PHONY: test cpp-test rust-test validate-json validate-docs validate-vectors validate-side-channel rust-crate-gate clean
 
-test: cpp-test validate-json validate-docs validate-vectors validate-side-channel rust-crate-gate
+test: cpp-test rust-crate-gate rust-test validate-json validate-docs validate-vectors validate-side-channel
 
 cpp-test:
 	cmake -S cpp -B build/cpp -DPQCORE_BUILD_TESTS=ON
 	cmake --build build/cpp
 	ctest --test-dir build/cpp --output-on-failure
+
+rust-test:
+	cargo test --manifest-path rust/pqcore/Cargo.toml
 
 validate-json:
 	python3 -m json.tool schemas/agentic-learning.schema.json >/dev/null

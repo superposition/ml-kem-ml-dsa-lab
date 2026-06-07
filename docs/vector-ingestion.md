@@ -108,7 +108,8 @@ pending official vector is better evidence than a false pass.
 
 ## Future Rust Differential Path
 
-Rust remains derivation-only until the Rust crate gate closes. The future differential path should:
+The initial Rust crate exists, but it does not yet include public ML-KEM or ML-DSA algorithm
+implementations or a vector runner. The future differential path should:
 
 1. load the same official vector manifest,
 2. run the C++ implementation against each vector,
@@ -117,7 +118,7 @@ Rust remains derivation-only until the Rust crate gate closes. The future differ
 5. compare C++ and Rust outputs to each other,
 6. report parameter set, mode, vector-set id, group id, and test-case id for failures.
 
-No Rust crate or Rust vector runner is added in this ticket.
+No Rust vector runner is added in this ticket.
 
 ## Readiness Caveat
 

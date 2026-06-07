@@ -14,7 +14,7 @@
     {
       "name": "rust_derivation_crate_gate",
       "language": "rust",
-      "expected_signal": "No Rust crate is introduced until the field, polynomial, encoding, vector, and constant-time derivation gates are documented"
+      "expected_signal": "The Rust crate remains internal and derivation-test-first after the field, polynomial, encoding, vector, and constant-time gates are documented"
     },
     {
       "name": "api_surface_fails_closed_until_implemented",
@@ -25,7 +25,7 @@
   "implementation_status": "green",
   "readiness_gate": "spec-coverage",
   "agent_notes": [
-    "The Rust track is derivation-first and intentionally has no crate yet.",
+    "The Rust track now has an internal derivation crate with no public ML-KEM API yet.",
     "The C++ green state proves API shape and fail-closed behavior only."
   ]
 }
