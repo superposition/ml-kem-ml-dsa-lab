@@ -66,6 +66,9 @@ This library must not be treated as production cryptography until the production
 - FIPS 203: Module-Lattice-Based Key-Encapsulation Mechanism Standard.
 - FIPS 204: Module-Lattice-Based Digital Signature Standard.
 - NIST ACVP vector generation/validation data is the planned test-vector source.
+- `docs/glossary.md` explains shared notation before implementation work.
+- `docs/fips-203-symbols.md` maps ML-KEM symbols and modules.
+- `docs/fips-204-symbols.md` maps ML-DSA symbols and modules.
 
 ## Rust Policy
 
