@@ -8,15 +8,14 @@ jobs:
   rust:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
       - run: cargo test --workspace
 
   cpp:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: cmake -S cpp -B build/cpp -DPQCORE_BUILD_TESTS=ON
       - run: cmake --build build/cpp
       - run: ctest --test-dir build/cpp --output-on-failure
-
