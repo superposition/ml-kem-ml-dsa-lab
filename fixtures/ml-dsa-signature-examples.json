@@ -1,0 +1,96 @@
+{
+  "source": {
+    "standard": "FIPS 204",
+    "sections": ["Section 5", "Section 6", "Section 7.2"],
+    "algorithms": [
+      "Algorithm 1",
+      "Algorithm 2",
+      "Algorithm 3",
+      "Algorithm 6",
+      "Algorithm 7",
+      "Algorithm 8",
+      "Algorithm 22",
+      "Algorithm 24",
+      "Algorithm 26"
+    ],
+    "url": "https://csrc.nist.gov/pubs/fips/204/final",
+    "status": "repository-owned deterministic signing-flow examples, not official NIST vectors"
+  },
+  "public_api": {
+    "production_status": "fail closed until official vector ingestion, ML-DSA encoding, ML-DSA NTT, and real SHAKE/XOF plumbing exist",
+    "context_limit_bytes": 255,
+    "message_format": "00 || uint8(context_length) || context || message"
+  },
+  "layouts": {
+    "public_key": "rho || t1",
+    "secret_key": "rho || K || tr || s1 || s2 || t0",
+    "signature": "c_tilde || z || h"
+  },
+  "parameter_sets": {
+    "ML-DSA-44": {
+      "public_key_bytes": 1312,
+      "secret_key_bytes": 2560,
+      "signature_bytes": 2420,
+      "challenge_bytes": 32,
+      "response_bytes": 2304,
+      "hint_bytes": 84,
+      "omega": 80,
+      "k": 4,
+      "l": 4
+    },
+    "ML-DSA-65": {
+      "public_key_bytes": 1952,
+      "secret_key_bytes": 4032,
+      "signature_bytes": 3309,
+      "challenge_bytes": 48,
+      "response_bytes": 3200,
+      "hint_bytes": 61,
+      "omega": 55,
+      "k": 6,
+      "l": 5
+    },
+    "ML-DSA-87": {
+      "public_key_bytes": 2592,
+      "secret_key_bytes": 4896,
+      "signature_bytes": 4627,
+      "challenge_bytes": 64,
+      "response_bytes": 4480,
+      "hint_bytes": 83,
+      "omega": 75,
+      "k": 8,
+      "l": 7
+    }
+  },
+  "test_hook": {
+    "keygen_seed": "00..1f",
+    "signing_random": "f0..d1",
+    "message": "msg",
+    "context": "ctx",
+    "formatted_message_bytes": [0, 3, 99, 116, 120, 109, 115, 103],
+    "forced_rejection_iterations": 1,
+    "verification_negatives": [
+      "modified message",
+      "modified public key",
+      "modified signature challenge",
+      "modified response bound marker",
+      "too many hints",
+      "malformed public-key length",
+      "malformed signature length"
+    ],
+    "ML-DSA-44": {
+      "public_key_first_16_bytes": [207, 120, 223, 146, 118, 126, 60, 57, 13, 255, 93, 1, 36, 124, 230, 63],
+      "tr_first_16_bytes": [239, 237, 204, 19, 53, 105, 167, 200, 243, 150, 93, 102, 19, 172, 219, 219],
+      "signature_first_16_bytes": [18, 118, 112, 144, 175, 96, 46, 119, 71, 35, 213, 146, 159, 67, 71, 136]
+    },
+    "ML-DSA-65": {
+      "public_key_first_16_bytes": [116, 113, 49, 186, 50, 231, 45, 0, 201, 80, 92, 243, 110, 7, 25, 137],
+      "tr_first_16_bytes": [222, 82, 32, 2, 171, 50, 225, 114, 168, 92, 168, 150, 24, 136, 244, 86],
+      "signature_first_16_bytes": [117, 224, 210, 209, 188, 218, 32, 217, 201, 157, 166, 170, 1, 233, 8, 104]
+    },
+    "ML-DSA-87": {
+      "public_key_first_16_bytes": [255, 183, 162, 169, 198, 101, 191, 133, 116, 165, 210, 63, 64, 212, 64, 150],
+      "tr_first_16_bytes": [200, 226, 145, 208, 216, 34, 188, 56, 236, 218, 165, 106, 31, 125, 14, 227],
+      "signature_first_16_bytes": [215, 176, 11, 132, 11, 218, 234, 89, 58, 84, 9, 138, 242, 45, 248, 191]
+    }
+  }
+}
