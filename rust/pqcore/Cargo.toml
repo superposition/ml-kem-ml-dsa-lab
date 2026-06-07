@@ -1,0 +1,12 @@
+[package]
+name = "pqcore"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "From-first-principles ML-KEM and ML-DSA library skeleton with test-driven lattice primitives."
+repository = "https://github.com/superposition/ml-kem-ml-dsa-lab"
+readme = "README.md"
+
+[lib]
+name = "pqcore"
+path = "src/lib.rs"

@@ -1,0 +1,31 @@
+{
+  "standard": "FIPS 203",
+  "module": "kem",
+  "lesson_id": "ml-kem.api.fail-closed",
+  "objective": "Define the ML-KEM library boundary before implementing key generation, encapsulation, and decapsulation.",
+  "sources": [
+    {
+      "label": "NIST FIPS 203",
+      "url": "https://csrc.nist.gov/pubs/fips/203/final",
+      "section": "ML-KEM algorithms and parameter sets"
+    }
+  ],
+  "tests": [
+    {
+      "name": "ml_kem_api_fails_closed_until_implemented",
+      "language": "rust",
+      "expected_signal": "KEM operations return NotImplemented rather than toy cryptography"
+    },
+    {
+      "name": "api_surface_fails_closed_until_implemented",
+      "language": "cpp",
+      "expected_signal": "KEM operations throw NotImplemented rather than toy cryptography"
+    }
+  ],
+  "implementation_status": "green",
+  "readiness_gate": "spec-coverage",
+  "agent_notes": [
+    "The first green state proves API shape and fail-closed behavior only."
+  ]
+}
+

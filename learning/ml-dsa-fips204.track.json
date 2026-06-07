@@ -1,0 +1,31 @@
+{
+  "standard": "FIPS 204",
+  "module": "dsa",
+  "lesson_id": "ml-dsa.api.fail-closed",
+  "objective": "Define the ML-DSA library boundary before implementing key generation, signing, and verification.",
+  "sources": [
+    {
+      "label": "NIST FIPS 204",
+      "url": "https://csrc.nist.gov/pubs/fips/204/final",
+      "section": "ML-DSA algorithms and parameter sets"
+    }
+  ],
+  "tests": [
+    {
+      "name": "ml_dsa_api_fails_closed_until_implemented",
+      "language": "rust",
+      "expected_signal": "Signature operations return NotImplemented rather than toy signatures"
+    },
+    {
+      "name": "api_surface_fails_closed_until_implemented",
+      "language": "cpp",
+      "expected_signal": "Signature operations throw NotImplemented rather than toy signatures"
+    }
+  ],
+  "implementation_status": "green",
+  "readiness_gate": "spec-coverage",
+  "agent_notes": [
+    "Production status is deferred until official vectors and side-channel review are complete."
+  ]
+}
+

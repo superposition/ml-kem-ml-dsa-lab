@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/superposition/ml-kem-ml-dsa-lab/schemas/agentic-learning.schema.json",
+  "title": "PQC Agentic Learning Trace",
+  "type": "object",
+  "required": ["standard", "module", "lesson_id", "objective", "tests", "readiness_gate"],
+  "properties": {
+    "standard": {
+      "type": "string",
+      "enum": ["FIPS 203", "FIPS 204"]
+    },
+    "module": {
+      "type": "string",
+      "examples": ["field", "polynomial", "ntt", "kem", "dsa"]
+    },
+    "lesson_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["label", "url"],
+        "properties": {
+          "label": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "section": { "type": "string" }
+        }
+      }
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "language", "expected_signal"],
+        "properties": {
+          "name": { "type": "string" },
+          "language": { "type": "string", "enum": ["rust", "cpp", "cross-language"] },
+          "expected_signal": { "type": "string" }
+        }
+      }
+    },
+    "implementation_status": {
+      "type": "string",
+      "enum": ["planned", "red", "green", "refactor", "reviewed"]
+    },
+    "readiness_gate": {
+      "type": "string",
+      "enum": ["spec-coverage", "official-vectors", "constant-time", "entropy", "memory-safety", "external-review"]
+    },
+    "agent_notes": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}
+
