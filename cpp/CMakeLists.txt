@@ -44,6 +44,10 @@ if(PQCORE_BUILD_TESTS)
   target_link_libraries(test_encoding PRIVATE pqcore)
   add_test(NAME test_encoding COMMAND test_encoding)
 
+  add_executable(test_ntt tests/test_ntt.cpp)
+  target_link_libraries(test_ntt PRIVATE pqcore)
+  add_test(NAME test_ntt COMMAND test_ntt)
+
   add_executable(test_polynomial tests/test_polynomial.cpp)
   target_link_libraries(test_polynomial PRIVATE pqcore)
   add_test(NAME test_polynomial COMMAND test_polynomial)

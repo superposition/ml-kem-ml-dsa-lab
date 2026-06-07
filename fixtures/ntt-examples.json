@@ -1,0 +1,31 @@
+{
+  "source": {
+    "ml_kem": {
+      "standard": "FIPS 203",
+      "ntt_section": "Section 4.3",
+      "precomputed_values": "Appendix A",
+      "url": "https://csrc.nist.gov/pubs/fips/203/final"
+    },
+    "ml_dsa": {
+      "standard": "FIPS 204",
+      "ntt_sections": "Sections 7.5 and 7.6",
+      "url": "https://csrc.nist.gov/pubs/fips/204/final"
+    },
+    "status": "repository-owned derivation examples, not official NIST vectors"
+  },
+  "ml_kem": {
+    "q": 3329,
+    "root": 17,
+    "inverse_scale": 3303,
+    "bit_reverse_7_examples": [
+      {"input": 0, "output": 0},
+      {"input": 1, "output": 64},
+      {"input": 2, "output": 32},
+      {"input": 127, "output": 127}
+    ],
+    "zeta_prefix": [1, 1729, 2580, 3289, 2642, 630, 1897, 848],
+    "gamma_prefix": [17, 3312, 2761, 568, 583, 2746, 2649, 680],
+    "constant_one_ntt_prefix": [1, 0, 1, 0, 1, 0, 1, 0],
+    "oracle": "inverse_ntt(ntt(f) * ntt(g)) must match schoolbook negacyclic multiplication"
+  }
+}
