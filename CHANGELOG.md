@@ -17,4 +17,5 @@
 - Added source-linked sampling derivation, isolated deterministic test hooks, and C++ sampling tests.
 - Added source-linked internal ML-KEM-512 PKE derivation and C++ test-hook implementation.
 - Added source-linked internal ML-KEM-512 KEM derivation, implicit-rejection tests, and public fail-closed contract.
+- Added source-linked ML-DSA rounding, hint, and challenge helper derivation with C++ tests.
 - Added agentic learning schema and production readiness gates.

@@ -21,6 +21,7 @@ This repository is designed as a derivation-first implementation lab. Production
 | Sampling and deterministic hooks | Yes | C++ + fixture | C++ | Internal | Test-only expansion, rejection, and bounded samplers exist |
 | Internal ML-KEM PKE | Partial | C++ + fixture | C++ | Internal | ML-KEM-512 test-hook PKE layer exists |
 | ML-KEM keygen/encap/decap | Partial | C++ + fixture | Internal test hook | Internal | ML-KEM-512 internal KEM path exists; public API fails closed until vectors land |
+| ML-DSA rounding/hints/challenge | Yes | C++ + fixture | C++ helpers | Internal | Power2Round, Decompose, hints, and challenge construction exist |
 | ML-DSA keygen/sign/verify | No | No | API only | No | C++ fails closed with `NotImplemented` |
 | NIST ACVP vectors | No | No | No | No | Required before production claims |
 
@@ -82,6 +83,7 @@ This library must not be treated as production cryptography until the production
 - `docs/sampling.md` derives sampling boundaries and deterministic test hooks.
 - `docs/ml-kem-pke.md` derives the internal ML-KEM-512 PKE layer.
 - `docs/ml-kem-kem.md` derives the internal ML-KEM-512 KEM path and public fail-closed contract.
+- `docs/ml-dsa-rounding-hints.md` derives ML-DSA rounding, hints, and challenge construction.
 - `docs/fips-203-symbols.md` maps ML-KEM symbols and modules.
 - `docs/fips-204-symbols.md` maps ML-DSA symbols and modules.
 

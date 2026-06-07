@@ -18,6 +18,7 @@ validate-json:
 	python3 -m json.tool fixtures/sampling-examples.json >/dev/null
 	python3 -m json.tool fixtures/ml-kem-pke-examples.json >/dev/null
 	python3 -m json.tool fixtures/ml-kem-kem-examples.json >/dev/null
+	python3 -m json.tool fixtures/ml-dsa-helper-examples.json >/dev/null
 
 validate-docs:
 	bash scripts/check-docs-glossary.sh

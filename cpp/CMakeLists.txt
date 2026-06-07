@@ -75,6 +75,10 @@ if(PQCORE_BUILD_TESTS)
   target_link_libraries(test_kem_internal_release_policy PRIVATE pqcore)
   add_test(NAME test_kem_internal_release_policy COMMAND test_kem_internal_release_policy)
 
+  add_executable(test_dsa_helpers tests/test_dsa_helpers.cpp)
+  target_link_libraries(test_dsa_helpers PRIVATE pqcore)
+  add_test(NAME test_dsa_helpers COMMAND test_dsa_helpers)
+
   add_executable(test_polynomial tests/test_polynomial.cpp)
   target_link_libraries(test_polynomial PRIVATE pqcore)
   add_test(NAME test_polynomial COMMAND test_polynomial)

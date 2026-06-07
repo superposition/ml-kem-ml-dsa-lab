@@ -1,0 +1,92 @@
+{
+  "source": {
+    "standard": "FIPS 204",
+    "sections": ["Section 7.4", "Section 7.5"],
+    "algorithms": [
+      "Algorithm 29",
+      "Algorithm 35",
+      "Algorithm 36",
+      "Algorithm 37",
+      "Algorithm 38",
+      "Algorithm 39",
+      "Algorithm 40"
+    ],
+    "url": "https://csrc.nist.gov/pubs/fips/204/final",
+    "status": "repository-owned derivation examples, not official NIST vectors"
+  },
+  "parameter_sets": {
+    "ML-DSA-44": {
+      "q": 8380417,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma2": 95232,
+      "alpha": 190464,
+      "high_bits_modulus": 44,
+      "challenge_seed_bytes": 32
+    },
+    "ML-DSA-65": {
+      "q": 8380417,
+      "d": 13,
+      "tau": 49,
+      "lambda": 192,
+      "gamma2": 261888,
+      "alpha": 523776,
+      "high_bits_modulus": 16,
+      "challenge_seed_bytes": 48
+    },
+    "ML-DSA-87": {
+      "q": 8380417,
+      "d": 13,
+      "tau": 60,
+      "lambda": 256,
+      "gamma2": 261888,
+      "alpha": 523776,
+      "high_bits_modulus": 16,
+      "challenge_seed_bytes": 64
+    }
+  },
+  "examples": {
+    "centered_mod": {
+      "modulus": 8192,
+      "inputs": [
+        {"value": 4096, "result": 4096},
+        {"value": 4097, "result": -4095}
+      ]
+    },
+    "power2round": {
+      "parameter_set": "ML-DSA-44",
+      "input": 4097,
+      "high": 1,
+      "low": -4095,
+      "recomposes_mod_q": true
+    },
+    "decompose_wrap_boundary": {
+      "input": 8380416,
+      "all_parameter_sets_high": 0,
+      "all_parameter_sets_low": -1,
+      "reason": "FIPS 204 special case when r_plus - r0 equals q - 1"
+    },
+    "hint_boundary": {
+      "parameter_set": "ML-DSA-44",
+      "r": 95232,
+      "z": 1,
+      "high_bits_r": 0,
+      "high_bits_r_plus_z": 1,
+      "make_hint": true,
+      "use_hint_true": 1,
+      "use_hint_false": 0
+    },
+    "challenge_fixture": {
+      "position_bytes": "j = i for every i from 256 - tau through 255",
+      "sign_bytes": "eight zero bytes",
+      "expected_nonzero_coefficients": "tau",
+      "expected_nonzero_values": [1]
+    }
+  },
+  "readiness": {
+    "public_signature_api": "still fail closed",
+    "constant_time_status": "not reviewed",
+    "official_vector_status": "not official NIST vectors"
+  }
+}
