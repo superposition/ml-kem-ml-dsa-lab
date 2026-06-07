@@ -20,10 +20,10 @@ This repository is designed as a derivation-first implementation lab. Production
 | NTT representation | Yes | C++ + fixture | C++ | Internal | ML-KEM NTT round trips and schoolbook oracle tests exist |
 | Sampling and deterministic hooks | Yes | C++ + fixture | C++ | Internal | Test-only expansion, rejection, and bounded samplers exist |
 | Internal ML-KEM PKE | Partial | C++ + fixture | C++ | Internal | ML-KEM-512 test-hook PKE layer exists |
-| ML-KEM keygen/encap/decap | Partial | C++ + fixture | Internal test hook | Internal | ML-KEM-512 internal KEM path exists; public API fails closed until vectors land |
+| ML-KEM keygen/encap/decap | Partial | C++ + fixture | Internal test hook | Internal | ML-KEM-512 internal KEM path exists; public API fails closed until production plumbing lands |
 | ML-DSA rounding/hints/challenge | Yes | C++ + fixture | C++ helpers | Internal | Power2Round, Decompose, hints, and challenge construction exist |
-| ML-DSA keygen/sign/verify | Partial | C++ + fixture | Internal test hook | Internal | Signing-flow harness exists; public API fails closed until vectors land |
-| NIST ACVP vectors | Partial | Manifest + harness | Parser + pending gate | Internal | Official sources recorded; vector sets pending |
+| ML-DSA keygen/sign/verify | Partial | C++ + fixture | Internal test hook | Internal | Signing-flow harness exists; public API fails closed until production plumbing lands |
+| NIST ACVP vectors | Partial | Strict manifest gate | Vendored generated vectors | Internal | NIST ACVP-Server prompt/expected sets are pinned and hash-checked; algorithm pass is pending |
 | Side-channel review gate | Partial | Manifest + C++ redaction test | Review gate | Internal | Production status remains false; blockers are tracked |
 
 ## Repository Layout
@@ -36,7 +36,7 @@ This repository is designed as a derivation-first implementation lab. Production
 ├── fixtures/                    # Repository-owned shared test fixtures
 ├── schemas/                     # Agentic learning trace schema
 ├── learning/                    # Initial learning tracks for ML-KEM and ML-DSA
-└── test-vectors/                # Placeholder for ACVP/KAT vector ingestion
+└── test-vectors/                # Vendored ACVP/KAT vector provenance and fixtures
 ```
 
 ## Test Commands
@@ -51,7 +51,7 @@ python3 -m json.tool learning/ml-kem-fips203.track.json >/dev/null
 python3 -m json.tool learning/ml-dsa-fips204.track.json >/dev/null
 python3 -m json.tool fixtures/parameter-sets.json >/dev/null
 bash scripts/check-docs-glossary.sh
-python3 scripts/check-vector-manifest.py --self-test
+python3 scripts/check-vector-manifest.py --self-test --require-official
 python3 scripts/check-side-channel-manifest.py --self-test
 bash scripts/check-rust-crate-gate.sh
 ```

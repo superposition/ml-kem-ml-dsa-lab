@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: python3 scripts/check-vector-manifest.py --self-test
+      - run: python3 scripts/check-vector-manifest.py --self-test --require-official
 
   side-channel:
     runs-on: ubuntu-latest

@@ -2,9 +2,9 @@
   "schema_version": 1,
   "retrieved_on": "2026-06-07",
   "policy": {
-    "official_vectors_status": "pending",
+    "official_vectors_status": "vendored-generated-vectors",
     "repository_fixtures_are_official": false,
-    "missing_official_vectors_behavior": "report pending reason; do not treat absent vectors as a conformance pass",
+    "missing_official_vectors_behavior": "fail the strict gate when vendored official vector files are absent, malformed, or hash-mismatched",
     "rust_differential_status": "initial Rust crate exists; differential runner pending official vectors and public algorithm implementations"
   },
   "sources": [
@@ -43,72 +43,185 @@
       "expires_on": "2026-10-18",
       "sha256": "986194d58fc4a3e68f497e935cd9c8c7899eb929cd58fe551736b5e7614fccb7",
       "hash_target": "retrieved HTML page"
+    },
+    {
+      "id": "nist-pqc-archive-acvp-vector-pointer",
+      "label": "NIST PQC archive ACVP vector pointer",
+      "url": "https://csrc.nist.gov/Projects/Post-Quantum-Cryptography/PQC-Archive",
+      "retrieved_on": "2026-06-07",
+      "sha256": "38e613627f39383930633d6d5e28e6c6af8d424379e52c58c78d5dc4ac98c08a",
+      "hash_target": "retrieved HTML page"
+    },
+    {
+      "id": "acvp-server-gen-val-json-files-15c0f3d",
+      "label": "NIST ACVP-Server generated validation JSON files",
+      "url": "https://github.com/usnistgov/ACVP-Server/tree/15c0f3deeefbfa8cb6cd32a99e1ca3b738c66bf0/gen-val/json-files",
+      "retrieved_on": "2026-06-07",
+      "commit": "15c0f3deeefbfa8cb6cd32a99e1ca3b738c66bf0",
+      "sha256": "4a45d715e3e1cb9f1cb3fbae0bb3945d151c90c1c6f140b41540ee7c645938bc",
+      "hash_target": "SHA-256 over pinned commit id plus vendored vector-set ids and vector-set digests"
     }
   ],
   "vector_sets": [
     {
       "id": "acvp-ml-kem-keygen-fips203",
       "kind": "official-acvp",
-      "source_id": "acvp-ml-kem-draft-celi-01",
-      "source_url": "https://pages.nist.gov/ACVP/draft-celi-acvp-ml-kem.html",
+      "source_id": "acvp-server-gen-val-json-files-15c0f3d",
+      "source_url": "https://github.com/usnistgov/ACVP-Server/tree/15c0f3deeefbfa8cb6cd32a99e1ca3b738c66bf0/gen-val/json-files/ML-KEM-keyGen-FIPS203",
       "retrieved_on": "2026-06-07",
-      "sha256": "f0bf1b2285549bf724dcd9ed083db550d5c9bf685a6d8066e77d5fac8ed4a845",
-      "hash_target": "source schema page; no vector set vendored",
+      "sha256": "06232fa908e8e393096d0adb4ff5e72d2f1c1cc8b1e526213f18cf416d5a93e7",
+      "hash_target": "SHA-256 over vendored file role, path, and SHA-256 entries",
       "standard": "FIPS 203",
       "scheme": "ML-KEM",
       "mode": "keyGen",
       "revision": "FIPS203",
       "parameter_sets": ["ML-KEM-512", "ML-KEM-768", "ML-KEM-1024"],
-      "status": "pending",
-      "pending_reason": "ACVP server keyGen vector set is not vendored yet; public ML-KEM stubs remain fail-closed."
+      "status": "vendored",
+      "is_sample": false,
+      "group_count": 3,
+      "case_count": 75,
+      "files": [
+        {
+          "role": "prompt",
+          "file": "test-vectors/acvp/ML-KEM-keyGen-FIPS203/prompt.json",
+          "source_path": "gen-val/json-files/ML-KEM-keyGen-FIPS203/prompt.json",
+          "sha256": "3f9ce34f6c836c77958bad2729e837c3b213f44ac36c3065976e7acca6389523"
+        },
+        {
+          "role": "expectedResults",
+          "file": "test-vectors/acvp/ML-KEM-keyGen-FIPS203/expectedResults.json",
+          "source_path": "gen-val/json-files/ML-KEM-keyGen-FIPS203/expectedResults.json",
+          "sha256": "a253d0ad91c95ebea5b409673defef0aa49d65d4ed72286399e2e798ddf073a4"
+        }
+      ]
     },
     {
       "id": "acvp-ml-kem-encapdecap-fips203",
       "kind": "official-acvp",
-      "source_id": "acvp-ml-kem-draft-celi-01",
-      "source_url": "https://pages.nist.gov/ACVP/draft-celi-acvp-ml-kem.html",
+      "source_id": "acvp-server-gen-val-json-files-15c0f3d",
+      "source_url": "https://github.com/usnistgov/ACVP-Server/tree/15c0f3deeefbfa8cb6cd32a99e1ca3b738c66bf0/gen-val/json-files/ML-KEM-encapDecap-FIPS203",
       "retrieved_on": "2026-06-07",
-      "sha256": "f0bf1b2285549bf724dcd9ed083db550d5c9bf685a6d8066e77d5fac8ed4a845",
-      "hash_target": "source schema page; no vector set vendored",
+      "sha256": "cb0ea7ff304bc6cec68497be3c3e96c2f22a70cec36612aa197de088426b39e0",
+      "hash_target": "SHA-256 over vendored file role, path, and SHA-256 entries",
       "standard": "FIPS 203",
       "scheme": "ML-KEM",
       "mode": "encapDecap",
       "revision": "FIPS203",
       "parameter_sets": ["ML-KEM-512", "ML-KEM-768", "ML-KEM-1024"],
-      "status": "pending",
-      "pending_reason": "ACVP server encapDecap vector set is not vendored yet; public ML-KEM stubs remain fail-closed."
+      "status": "vendored",
+      "is_sample": true,
+      "group_count": 12,
+      "case_count": 165,
+      "files": [
+        {
+          "role": "prompt",
+          "file": "test-vectors/acvp/ML-KEM-encapDecap-FIPS203/prompt.json",
+          "source_path": "gen-val/json-files/ML-KEM-encapDecap-FIPS203/prompt.json",
+          "sha256": "91d405f78eb450d42e59e40948148212566e7b31b3ff953366c01c084152a0e3"
+        },
+        {
+          "role": "expectedResults",
+          "file": "test-vectors/acvp/ML-KEM-encapDecap-FIPS203/expectedResults.json",
+          "source_path": "gen-val/json-files/ML-KEM-encapDecap-FIPS203/expectedResults.json",
+          "sha256": "5f1544d9604ca27c0388d114344fa14ee4d8f8e902a1c13832aa8ff5db3c535d"
+        }
+      ]
     },
     {
       "id": "acvp-ml-dsa-keygen-fips204",
       "kind": "official-acvp",
-      "source_id": "acvp-ml-dsa-draft-celi-01",
-      "source_url": "https://pages.nist.gov/ACVP/draft-celi-acvp-ml-dsa.html",
+      "source_id": "acvp-server-gen-val-json-files-15c0f3d",
+      "source_url": "https://github.com/usnistgov/ACVP-Server/tree/15c0f3deeefbfa8cb6cd32a99e1ca3b738c66bf0/gen-val/json-files/ML-DSA-keyGen-FIPS204",
       "retrieved_on": "2026-06-07",
-      "sha256": "986194d58fc4a3e68f497e935cd9c8c7899eb929cd58fe551736b5e7614fccb7",
-      "hash_target": "source schema page; no vector set vendored",
+      "sha256": "c5fa61ccca64f1c592ac9d5964c2ffe68e94ef5c80d4d7e298f15e68e9b7b20a",
+      "hash_target": "SHA-256 over vendored file role, path, and SHA-256 entries",
       "standard": "FIPS 204",
       "scheme": "ML-DSA",
       "mode": "keyGen",
       "revision": "FIPS204",
       "parameter_sets": ["ML-DSA-44", "ML-DSA-65", "ML-DSA-87"],
-      "status": "pending",
-      "pending_reason": "ACVP server keyGen vector set is not vendored yet; public ML-DSA stubs remain fail-closed."
+      "status": "vendored",
+      "is_sample": false,
+      "group_count": 3,
+      "case_count": 75,
+      "files": [
+        {
+          "role": "prompt",
+          "file": "test-vectors/acvp/ML-DSA-keyGen-FIPS204/prompt.json",
+          "source_path": "gen-val/json-files/ML-DSA-keyGen-FIPS204/prompt.json",
+          "sha256": "02fad612a060bbcf3bbbd164caf7e9da964ba385c90e08bcd26516e3bf8a023d"
+        },
+        {
+          "role": "expectedResults",
+          "file": "test-vectors/acvp/ML-DSA-keyGen-FIPS204/expectedResults.json",
+          "source_path": "gen-val/json-files/ML-DSA-keyGen-FIPS204/expectedResults.json",
+          "sha256": "58dca0195226491c9cb117e1f0ec4cb11d4a1e3bd8b0f955371d80c99d4e8810"
+        }
+      ]
+    },
+    {
+      "id": "acvp-ml-dsa-siggen-fips204",
+      "kind": "official-acvp",
+      "source_id": "acvp-server-gen-val-json-files-15c0f3d",
+      "source_url": "https://github.com/usnistgov/ACVP-Server/tree/15c0f3deeefbfa8cb6cd32a99e1ca3b738c66bf0/gen-val/json-files/ML-DSA-sigGen-FIPS204",
+      "retrieved_on": "2026-06-07",
+      "sha256": "93b9d052ad2bcdf774f66a1bc8c99a535e20a2fa7a99980f5270af97c9f5b2b7",
+      "hash_target": "SHA-256 over vendored file role, path, and SHA-256 entries",
+      "standard": "FIPS 204",
+      "scheme": "ML-DSA",
+      "mode": "sigGen",
+      "revision": "FIPS204",
+      "parameter_sets": ["ML-DSA-44", "ML-DSA-65", "ML-DSA-87"],
+      "status": "vendored",
+      "is_sample": false,
+      "group_count": 24,
+      "case_count": 360,
+      "files": [
+        {
+          "role": "prompt",
+          "file": "test-vectors/acvp/ML-DSA-sigGen-FIPS204/prompt.json",
+          "source_path": "gen-val/json-files/ML-DSA-sigGen-FIPS204/prompt.json",
+          "sha256": "4305197be3c17be8f99338086eb8033ff2400f7d5b816123fc28b184c6e77a55"
+        },
+        {
+          "role": "expectedResults",
+          "file": "test-vectors/acvp/ML-DSA-sigGen-FIPS204/expectedResults.json",
+          "source_path": "gen-val/json-files/ML-DSA-sigGen-FIPS204/expectedResults.json",
+          "sha256": "7b70ffeba6efe24e90760c751a7ebc4907931600645ebfa3f8a2459164d0a95d"
+        }
+      ]
     },
     {
       "id": "acvp-ml-dsa-sigver-fips204",
       "kind": "official-acvp",
-      "source_id": "acvp-ml-dsa-draft-celi-01",
-      "source_url": "https://pages.nist.gov/ACVP/draft-celi-acvp-ml-dsa.html",
+      "source_id": "acvp-server-gen-val-json-files-15c0f3d",
+      "source_url": "https://github.com/usnistgov/ACVP-Server/tree/15c0f3deeefbfa8cb6cd32a99e1ca3b738c66bf0/gen-val/json-files/ML-DSA-sigVer-FIPS204",
       "retrieved_on": "2026-06-07",
-      "sha256": "986194d58fc4a3e68f497e935cd9c8c7899eb929cd58fe551736b5e7614fccb7",
-      "hash_target": "source schema page; no vector set vendored",
+      "sha256": "9daa8a0197a2feb2c11bd6cc53171e894e411a2772f5e35da3bba006ba7d3218",
+      "hash_target": "SHA-256 over vendored file role, path, and SHA-256 entries",
       "standard": "FIPS 204",
       "scheme": "ML-DSA",
       "mode": "sigVer",
       "revision": "FIPS204",
       "parameter_sets": ["ML-DSA-44", "ML-DSA-65", "ML-DSA-87"],
-      "status": "pending",
-      "pending_reason": "ACVP server signature vector set is not vendored yet; public ML-DSA stubs remain fail-closed."
+      "status": "vendored",
+      "is_sample": false,
+      "group_count": 12,
+      "case_count": 180,
+      "files": [
+        {
+          "role": "prompt",
+          "file": "test-vectors/acvp/ML-DSA-sigVer-FIPS204/prompt.json",
+          "source_path": "gen-val/json-files/ML-DSA-sigVer-FIPS204/prompt.json",
+          "sha256": "2a9b7fcbefdd8e69dd6fbe6b4abb7130d855e8429aaa6f4904385e68b7e63d3a"
+        },
+        {
+          "role": "expectedResults",
+          "file": "test-vectors/acvp/ML-DSA-sigVer-FIPS204/expectedResults.json",
+          "source_path": "gen-val/json-files/ML-DSA-sigVer-FIPS204/expectedResults.json",
+          "sha256": "33e0ea7dd9c3b0206712da50286ad746864371433977225ab77e8aae76358842"
+        }
+      ]
     },
     {
       "id": "repo-placeholder-public-api-failclosed",

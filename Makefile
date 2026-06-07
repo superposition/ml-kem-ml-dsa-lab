@@ -31,7 +31,7 @@ validate-docs:
 	bash scripts/check-docs-glossary.sh
 
 validate-vectors:
-	python3 scripts/check-vector-manifest.py --self-test
+	python3 scripts/check-vector-manifest.py --self-test --require-official
 
 validate-side-channel:
 	python3 scripts/check-side-channel-manifest.py --self-test
