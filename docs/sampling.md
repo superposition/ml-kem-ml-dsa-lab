@@ -6,8 +6,9 @@ This document derives the first sampling boundaries for ML-KEM and ML-DSA and re
 
 | Scheme | FIPS source | Sampling source | Scope in this ticket |
 | --- | --- | --- | --- |
-| ML-KEM | FIPS 203 | Section 4.1; Section 4.2.2, Algorithms 7 and 8; Appendix B Table 4 | C++ test-only expansion hook, `SampleNTT` byte rejection, and `SamplePolyCBD` |
-| ML-DSA | FIPS 204 | Section 7.3, Algorithms 29-34; Algorithms 14 and 15; Appendix C Table 3 | C++ coefficient decoders, bounded sampler, and `SampleInBall` byte-stream derivation |
+| SHA-3/SHAKE | FIPS 202 | SHA3-256, SHA3-512, SHAKE128, SHAKE256 | C++ primitive wrappers and known-answer tests |
+| ML-KEM | FIPS 203 | Section 4.1; Section 4.2.2, Algorithms 7 and 8; Appendix B Table 4 | C++ SHAKE-backed PRF/XOF wrappers, test-only expansion hook, `SampleNTT` byte rejection, and `SamplePolyCBD` |
+| ML-DSA | FIPS 204 | Section 7.3, Algorithms 29-34; Algorithms 14 and 15; Appendix C Table 3 | C++ SHAKE-backed hash boundary, coefficient decoders, bounded sampler, and `SampleInBall` byte-stream derivation |
 
 ## Entropy Versus Deterministic Expansion
 
@@ -15,7 +16,7 @@ Entropy is external randomness. Production key generation and randomized signing
 
 Deterministic expansion starts from seed bytes and domain inputs. It is required for reproducible vectors and for standard algorithms that expand seeds through XOF or PRF functions.
 
-This repository does not yet implement SHAKE128 or SHAKE256. The C++ `deterministic_test_expand` helper is only compiled when `PQCORE_ENABLE_TEST_SAMPLING` is defined for tests. It is a fixture generator, not a cryptographic XOF or PRF.
+The C++ SHA-3 layer implements SHA3-256, SHA3-512, SHAKE128, and SHAKE256. The C++ `deterministic_test_expand` helper is still only compiled when `PQCORE_ENABLE_TEST_SAMPLING` is defined for tests. It is a fixture generator, not a cryptographic XOF or PRF.
 
 The default production path is fail-closed: `production_random_bytes` throws until a reviewed entropy source is wired.
 
@@ -31,7 +32,13 @@ where `eta` is 2 or 3.
 
 FIPS 203 also defines an XOF wrapper over SHAKE128 whose squeeze length is measured in bytes. `SampleNTT` absorbs a 34-byte input: a 32-byte seed plus two index bytes.
 
-The C++ test hooks preserve the domain shape:
+The production-named C++ wrappers are:
+
+- `ml_kem_prf(seed, nonce, eta)`,
+- `ml_kem_xof(seed_with_indices, output_bytes)`,
+- `ml_kem_sample_ntt(seed_with_indices)`.
+
+The C++ test hooks preserve the same input shapes behind the test flag:
 
 - `ml_kem_prf_test(seed, nonce, eta)`,
 - `ml_kem_xof_test(seed_with_indices, output_bytes)`.
@@ -82,7 +89,9 @@ FIPS 204 uses several samplers:
 - `RejBoundedPoly` uses `CoeffFromHalfByte`,
 - `SampleInBall` creates exactly `tau` nonzero coefficients in `{ -1, 1 }`.
 
-The C++ code implements the byte-to-coefficient boundaries and byte-stream versions of `RejBoundedPoly` and `SampleInBall`. Full ML-DSA `ExpandA`, `ExpandS`, and `ExpandMask` still wait for SHAKE/XOF plumbing and later ML-DSA tickets.
+The C++ code implements the byte-to-coefficient boundaries, byte-stream versions of `RejBoundedPoly`
+and `SampleInBall`, and SHAKE256-backed hash boundaries for `tr`, `mu`, signing seed derivation, and
+commitment challenge bytes. Full ML-DSA `ExpandA`, `ExpandS`, and `ExpandMask` remain future work.
 
 ## Statistical Tests
 
@@ -91,11 +100,10 @@ Bounds and reproducibility tests are necessary but not sufficient. A sampler can
 Production readiness still requires:
 
 - official vectors,
-- reviewed SHAKE/XOF/PRF implementations,
+- reviewed SHAKE/XOF/PRF implementation usage,
 - reviewed entropy sources,
 - side-channel review for secret-bearing samples.
 
 ## Fixture
 
 The fixture at `fixtures/sampling-examples.json` records deterministic-hook examples, rejection examples, and sampler bounds for future cross-language comparison. It is not an official NIST vector file.
-

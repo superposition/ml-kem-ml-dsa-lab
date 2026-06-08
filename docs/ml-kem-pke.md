@@ -29,11 +29,15 @@ For ML-KEM-512:
 
 The matrix `A` has shape `2 x 2`. Secret, error, and ciphertext vector components have length `2`.
 
-## Test-Hook Expansion
+## Hash/XOF/PRF Boundary
 
-FIPS 203 uses `G`, `XOF`, and `PRF` based on SHAKE functions. This repository does not yet implement SHAKE. The C++ implementation therefore exposes the K-PKE path only through the existing `PQCORE_ENABLE_TEST_SAMPLING` deterministic hook.
+FIPS 203 uses `G`, `XOF`, and `PRF` based on SHA3/SHAKE functions. The C++ implementation now has production-named helpers for:
 
-The deterministic hook preserves the algorithm shape for derivation tests, but it is not cryptographic. Normal builds use release-policy stubs that throw.
+- `G(seed)` through SHA3-512 seed expansion,
+- `XOF(rho || j || i)` through SHAKE128,
+- `PRF_eta(seed, nonce)` through SHAKE256.
+
+The full K-PKE algorithm path still remains an internal derivation surface. The deterministic test hook preserves the algorithm shape for derivation tests, but it is not cryptographic. Normal builds keep test-only helpers behind release-policy stubs that throw.
 
 ## Key Generation
 
@@ -109,5 +113,4 @@ The fixture at `fixtures/ml-kem-pke-examples.json` records ML-KEM-512 dimensions
 
 ## Readiness Caveat
 
-Passing internal K-PKE tests does not prove public ML-KEM correctness. The outer KEM transform, official vectors, real SHAKE/XOF/PRF plumbing, entropy review, and constant-time review are still required.
-
+Passing internal K-PKE tests does not prove public ML-KEM correctness. The outer KEM transform, official vector execution, entropy review, and constant-time review are still required.

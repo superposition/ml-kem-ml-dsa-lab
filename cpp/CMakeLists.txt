@@ -57,6 +57,14 @@ if(PQCORE_BUILD_TESTS)
   target_link_libraries(test_sampling_release_policy PRIVATE pqcore)
   add_test(NAME test_sampling_release_policy COMMAND test_sampling_release_policy)
 
+  add_executable(test_sha3 tests/test_sha3.cpp)
+  target_link_libraries(test_sha3 PRIVATE pqcore)
+  add_test(NAME test_sha3 COMMAND test_sha3)
+
+  add_executable(test_crypto_boundaries tests/test_crypto_boundaries.cpp)
+  target_link_libraries(test_crypto_boundaries PRIVATE pqcore)
+  add_test(NAME test_crypto_boundaries COMMAND test_crypto_boundaries)
+
   add_executable(test_pke tests/test_pke.cpp)
   target_link_libraries(test_pke PRIVATE pqcore)
   target_compile_definitions(test_pke PRIVATE PQCORE_ENABLE_TEST_SAMPLING=1)

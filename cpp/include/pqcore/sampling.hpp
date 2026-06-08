@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -9,9 +10,11 @@
 #include <string_view>
 #include <vector>
 
+#include "pqcore/entropy.hpp"
 #include "pqcore/field.hpp"
 #include "pqcore/ntt.hpp"
 #include "pqcore/polynomial.hpp"
+#include "pqcore/sha3.hpp"
 
 namespace pqcore {
 
@@ -27,12 +30,6 @@ inline constexpr bool kDeterministicTestSamplingEnabled = true;
 #else
 inline constexpr bool kDeterministicTestSamplingEnabled = false;
 #endif
-
-[[nodiscard]] inline std::vector<std::uint8_t> production_random_bytes(std::size_t output_bytes) {
-  (void)output_bytes;
-  throw std::logic_error{
-      "production entropy source is not configured; see docs/production-readiness.md"};
-}
 
 [[nodiscard]] inline std::vector<std::uint8_t> bytes_to_bits(std::span<const std::uint8_t> bytes) {
   std::vector<std::uint8_t> bits;
@@ -50,6 +47,22 @@ inline constexpr bool kDeterministicTestSamplingEnabled = false;
     throw std::invalid_argument{"ML-KEM PRF eta must be 2 or 3"};
   }
   return 64 * eta;
+}
+
+[[nodiscard]] inline std::vector<std::uint8_t> ml_kem_prf(
+    const MlKemSeed& seed,
+    std::uint8_t nonce,
+    std::size_t eta) {
+  std::array<std::uint8_t, kMlKemSeedBytes + 1> input{};
+  std::copy(seed.begin(), seed.end(), input.begin());
+  input[kMlKemSeedBytes] = nonce;
+  return shake256(input, ml_kem_prf_output_bytes(eta));
+}
+
+[[nodiscard]] inline std::vector<std::uint8_t> ml_kem_xof(
+    const MlKemSampleNttSeed& seed,
+    std::size_t output_bytes) {
+  return shake128(seed, output_bytes);
 }
 
 [[nodiscard]] inline MlKemNttPolynomial ml_kem_sample_ntt_from_bytes(
@@ -82,6 +95,11 @@ inline constexpr bool kDeterministicTestSamplingEnabled = false;
   }
 
   return MlKemNttPolynomial{coefficients};
+}
+
+[[nodiscard]] inline MlKemNttPolynomial ml_kem_sample_ntt(
+    const MlKemSampleNttSeed& seed) {
+  return ml_kem_sample_ntt_from_bytes(ml_kem_xof(seed, 3 * 1024));
 }
 
 [[nodiscard]] inline MlKemPolynomial ml_kem_sample_poly_cbd(
@@ -276,4 +294,3 @@ inline constexpr bool kDeterministicTestSamplingEnabled = false;
 #endif
 
 }  // namespace pqcore
-

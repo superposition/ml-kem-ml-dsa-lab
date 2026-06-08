@@ -75,7 +75,7 @@
     {
       "id": "sampling",
       "doc": "docs/side-channel-review.md",
-      "source_files": ["cpp/include/pqcore/sampling.hpp"],
+      "source_files": ["cpp/include/pqcore/sampling.hpp", "cpp/include/pqcore/sha3.hpp", "cpp/include/pqcore/entropy.hpp"],
       "review_status": "not-production-reviewed",
       "public_inputs": ["public sampler parameters", "challenge bytes"],
       "secret_inputs": ["seeds", "PRF input", "secret-vector expansion input", "signing mask input"],
@@ -88,7 +88,7 @@
       ],
       "secret_dependent_memory_access": [
         {
-          "description": "current samplers write sequential coefficients; future XOF readers need review for bounded loops and buffer handling",
+          "description": "current samplers write sequential coefficients; SHAKE-backed readers need review for bounded loops and buffer handling",
           "status": "needs-final-review"
         }
       ],
@@ -98,7 +98,7 @@
           "status": "open-production-blocker"
         }
       ],
-      "side_channel_note": "Sampling tests prove bounds and parsing behavior only. Real SHAKE/XOF/PRF plumbing and secret-bearing sampler loops remain production blockers."
+      "side_channel_note": "Sampling tests prove bounds, parsing behavior, and SHAKE-backed PRF/XOF wrapper shape. Secret-bearing sampler loops remain production blockers."
     },
     {
       "id": "ml-kem-pke",
@@ -126,7 +126,7 @@
           "status": "documented"
         }
       ],
-      "side_channel_note": "The K-PKE path is a deterministic test hook. It cannot support production claims until SHAKE/XOF/PRF, vectors, and side-channel review land."
+      "side_channel_note": "K-PKE has SHAKE-backed seed, matrix, and noise expansion helpers, but the end-to-end path remains a deterministic test hook. It cannot support production claims until vector execution and side-channel review land."
     },
     {
       "id": "ml-kem-kem",
@@ -155,7 +155,7 @@
           "status": "reviewed-internal-test-hook"
         }
       ],
-      "side_channel_note": "Internal ML-KEM-512 decapsulation has reviewed fail-closed shape for the test hook. Production completion still requires real hashing, official vectors, optimized compiler-output review, and external cryptographic review."
+      "side_channel_note": "Internal ML-KEM-512 decapsulation has reviewed fail-closed shape for the test hook. Production completion still requires official vector execution, optimized compiler-output review, and external cryptographic review."
     },
     {
       "id": "ml-dsa-helpers",
@@ -212,7 +212,7 @@
           "status": "documented"
         }
       ],
-      "side_channel_note": "The ML-DSA signing path is a flow harness. Production signing is blocked on final algorithm implementation and rejection-loop side-channel review."
+      "side_channel_note": "ML-DSA has SHAKE256-backed tr, mu, signing-seed, and challenge helpers, but the signing path remains a flow harness. Production signing is blocked on final algorithm implementation and rejection-loop side-channel review."
     },
     {
       "id": "public-api-stubs",
@@ -279,7 +279,7 @@
     {
       "id": "SC-SAMPLING-001",
       "module_id": "sampling",
-      "title": "Secret-bearing sampler loops need final review with real SHAKE/XOF/PRF plumbing",
+      "title": "Secret-bearing sampler loops need final review with SHAKE-backed PRF/XOF plumbing",
       "status": "open-production-blocker",
       "production_blocker": true,
       "public_tracking": "issue #14"

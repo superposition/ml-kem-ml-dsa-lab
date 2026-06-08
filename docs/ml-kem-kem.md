@@ -31,8 +31,8 @@ Production public functions still fail closed with `NotImplemented`. `ml_kem_enc
 checks the public-key length before throwing, and `ml_kem_decapsulate` checks both the
 decapsulation-key and ciphertext lengths before throwing.
 
-The stubs must not be replaced until official ACVP/KAT vector ingestion and real
-SHA3/SHAKE plumbing exist. The repository-owned fixture for this ticket is deterministic
+The stubs must not be replaced until official ACVP/KAT vector execution, entropy review, and
+side-channel review are complete. The repository-owned fixture for this ticket is deterministic
 derivation data, not a NIST vector file.
 
 ## Internal Key Generation
@@ -125,21 +125,27 @@ The current side-channel review state is recorded in `docs/side-channel-review.m
 
 The internal ML-KEM-512 decapsulation failure path is reviewed for the deterministic test hook:
 ciphertext equality is accumulated across the full ciphertext, and shared-secret selection is
-mask-based. This is still a production blocker until real hashing, official vectors, optimized
+mask-based. This is still a production blocker until official vector execution, optimized
 compiler-output review, and external cryptographic review land.
 
 ## Deterministic Test Mode
 
-FIPS 203 defines `H`, `G`, and `J` through SHA3/SHAKE functions. This repository does not yet
-implement SHA3/SHAKE, so the C++ implementation exposes only deterministic `_test` helpers
-behind `PQCORE_ENABLE_TEST_SAMPLING`.
+FIPS 203 defines `H`, `G`, and `J` through SHA3/SHAKE functions. The C++ implementation now exposes
+production-named helpers for:
+
+- `H(s) = SHA3-256(s)`,
+- `G(c) = SHA3-512(c)`,
+- `J(s) = SHAKE256(s, 32)`.
+
+The end-to-end internal KEM flow still exposes only deterministic `_test` helpers behind
+`PQCORE_ENABLE_TEST_SAMPLING`.
 
 Normal builds compile release-policy stubs for the internal helpers. They throw if called.
 
 ## Official Vectors
 
-Official vector ingestion is planned under the ACVP/KAT vector gate. Once real vectors are
-available, public tests should cover:
+Official vector files are vendored under the ACVP/KAT vector gate. Once the production algorithm path
+is complete, public tests should cover:
 
 - `ML-KEM.KeyGen_internal`,
 - `ML-KEM.Encaps_internal`,
@@ -160,5 +166,5 @@ boundary. It is not an official NIST vector file.
 ## Readiness Caveat
 
 Passing these internal KEM tests does not prove production ML-KEM correctness. Production
-readiness still requires official vectors, real SHA3/SHAKE/XOF/PRF plumbing, entropy review,
-constant-time review, and external cryptographic review.
+readiness still requires official vector execution, entropy review, constant-time review, and external
+cryptographic review.

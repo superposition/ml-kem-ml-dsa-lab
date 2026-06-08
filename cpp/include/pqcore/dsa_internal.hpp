@@ -127,6 +127,53 @@ struct MlDsaInternalSignResult {
   });
 }
 
+[[nodiscard]] inline std::vector<std::uint8_t> ml_dsa_hash(
+    std::span<const std::uint8_t> input,
+    std::size_t output_bytes) {
+  return shake256(input, output_bytes);
+}
+
+[[nodiscard]] inline std::vector<std::uint8_t> ml_dsa_hash_tr(
+    std::span<const std::uint8_t> public_key) {
+  return ml_dsa_hash(public_key, kMlDsaPublicKeyHashBytes);
+}
+
+[[nodiscard]] inline std::vector<std::uint8_t> ml_dsa_message_representative(
+    std::span<const std::uint8_t> public_key_hash,
+    std::span<const std::uint8_t> formatted_message) {
+  if (public_key_hash.size() != kMlDsaPublicKeyHashBytes) {
+    throw std::invalid_argument{"ML-DSA public-key hash has the wrong length"};
+  }
+  return ml_dsa_hash(ml_dsa_concat(public_key_hash, formatted_message), kMlDsaPublicKeyHashBytes);
+}
+
+[[nodiscard]] inline std::vector<std::uint8_t> ml_dsa_signing_seed(
+    std::span<const std::uint8_t> signing_key,
+    const MlDsaSigningRandom& signing_random,
+    std::span<const std::uint8_t> message_representative) {
+  if (signing_key.size() != kMlDsaSeedBytes) {
+    throw std::invalid_argument{"ML-DSA signing key seed has the wrong length"};
+  }
+  if (message_representative.size() != kMlDsaPublicKeyHashBytes) {
+    throw std::invalid_argument{"ML-DSA message representative has the wrong length"};
+  }
+  const auto signing_seed_prefix = ml_dsa_concat(signing_key, signing_random);
+  return ml_dsa_hash(
+      ml_dsa_concat(signing_seed_prefix, message_representative), kMlDsaPublicKeyHashBytes);
+}
+
+[[nodiscard]] inline std::vector<std::uint8_t> ml_dsa_commitment_hash(
+    MlDsaParameterSet parameter_set,
+    std::span<const std::uint8_t> message_representative,
+    std::span<const std::uint8_t> witness) {
+  if (message_representative.size() != kMlDsaPublicKeyHashBytes) {
+    throw std::invalid_argument{"ML-DSA message representative has the wrong length"};
+  }
+  return ml_dsa_hash(
+      ml_dsa_concat(message_representative, witness),
+      ml_dsa_signature_challenge_bytes(params(parameter_set)));
+}
+
 #ifdef PQCORE_ENABLE_TEST_SAMPLING
 [[nodiscard]] inline std::vector<std::uint8_t> ml_dsa_hash_tr_test(
     std::span<const std::uint8_t> public_key) {
