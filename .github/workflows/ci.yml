@@ -20,6 +20,7 @@ jobs:
       - uses: actions/checkout@v6
       - run: bash scripts/check-rust-crate-gate.sh
       - run: cargo test --manifest-path rust/pqcore/Cargo.toml
+      - run: cargo run --manifest-path rust/pqcore/Cargo.toml --bin rust-vector-runner -- --manifest test-vectors/manifest.json
 
   docs:
     runs-on: ubuntu-latest

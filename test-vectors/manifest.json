@@ -5,7 +5,7 @@
     "official_vectors_status": "vendored-generated-vectors",
     "repository_fixtures_are_official": false,
     "missing_official_vectors_behavior": "fail the strict gate when vendored official vector files are absent, malformed, or hash-mismatched",
-    "rust_differential_status": "initial Rust crate exists; differential runner pending official vectors and public algorithm implementations"
+    "rust_differential_status": "Rust manifest runner active; official vector execution pending public algorithm implementations"
   },
   "sources": [
     {
@@ -242,8 +242,8 @@
   ],
   "differential_tests": {
     "cpp_status": "placeholder harness active",
-    "rust_status": "initial derivation crate active; vector runner pending",
-    "planned_comparison": "Run the same official vector set through C++ and Rust implementations after official vectors and public algorithms exist.",
-    "planned_ci_job": "vector-tests"
+    "rust_status": "manifest-backed vector runner active; algorithm execution pending",
+    "planned_comparison": "Run the same official vector set through C++ and Rust implementations after public algorithms exist.",
+    "planned_ci_job": "rust job runs rust-vector-runner"
   }
 }

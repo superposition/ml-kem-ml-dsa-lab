@@ -12,7 +12,7 @@ This repository is designed as a derivation-first implementation lab. Production
 | Area | Derived | Tested | Implemented | Reviewed | Notes |
 | --- | --- | --- | --- | --- | --- |
 | Derivation-first process | Yes | Yes | Yes | Internal | CI validates the intentional internal Rust crate shape |
-| Rust crate | Partial | Cargo test | Internal derivation crate | Internal | No public ML-KEM/ML-DSA API; not production cryptography |
+| Rust crate | Partial | Cargo test + vector runner | Internal derivation crate | Internal | No public ML-KEM/ML-DSA API; not production cryptography |
 | Parameter metadata | Yes | C++ + fixture | C++ | Internal | Source-linked derivation and shared fixture exist |
 | Finite-field arithmetic | Yes | C++ | C++ | Internal | Source-linked derivation and arithmetic tests exist |
 | Polynomial arithmetic | Yes | C++ | C++ | Internal | Source-linked derivation and schoolbook oracle tests exist |
@@ -25,6 +25,7 @@ This repository is designed as a derivation-first implementation lab. Production
 | ML-DSA rounding/hints/challenge | Yes | C++ + fixture | C++ helpers | Internal | Power2Round, Decompose, hints, and challenge construction exist |
 | ML-DSA keygen/sign/verify | Partial | C++ + fixture | Internal test hook | Internal | Signing-flow harness exists; public API fails closed until production plumbing lands |
 | NIST ACVP vectors | Partial | Strict manifest gate | Vendored generated vectors | Internal | NIST ACVP-Server prompt/expected sets are pinned and hash-checked; algorithm pass is pending |
+| Rust vector runner | Partial | Cargo run | Rust manifest runner | Internal | Loads the shared vector manifest and marks unavailable Rust algorithms pending |
 | Side-channel review gate | Partial | Manifest + C++ redaction test | Review gate | Internal | Production status remains false; blockers are tracked |
 
 ## Repository Layout
@@ -47,6 +48,7 @@ cmake -S cpp -B build/cpp -DPQCORE_BUILD_TESTS=ON
 cmake --build build/cpp
 ctest --test-dir build/cpp --output-on-failure
 cargo test --manifest-path rust/pqcore/Cargo.toml
+cargo run --manifest-path rust/pqcore/Cargo.toml --bin rust-vector-runner -- --manifest test-vectors/manifest.json
 python3 -m json.tool schemas/agentic-learning.schema.json >/dev/null
 python3 -m json.tool learning/ml-kem-fips203.track.json >/dev/null
 python3 -m json.tool learning/ml-dsa-fips204.track.json >/dev/null
@@ -90,7 +92,7 @@ This library must not be treated as production cryptography until the production
 - `docs/ml-kem-kem.md` derives the internal ML-KEM-512 KEM path and public fail-closed contract.
 - `docs/ml-dsa-rounding-hints.md` derives ML-DSA rounding, hints, and challenge construction.
 - `docs/ml-dsa-signature.md` derives the ML-DSA signature API contract and internal signing-flow boundary.
-- `docs/vector-ingestion.md` defines official vector provenance, pending behavior, and future differential tests.
+- `docs/vector-ingestion.md` defines official vector provenance, pending behavior, and the Rust manifest runner.
 - `docs/side-channel-review.md` defines secret-bearing surfaces and the constant-time review gate.
 - `docs/fips-203-symbols.md` maps ML-KEM symbols and modules.
 - `docs/fips-204-symbols.md` maps ML-DSA symbols and modules.

@@ -28,6 +28,13 @@ Do not add another `Cargo.toml` or a public Rust API without updating the checkl
 - parameter tables and byte lengths,
 - field element semantics,
 - polynomial ring semantics,
-- shared repository fixture links.
+- shared repository fixture links,
+- manifest-backed vector-runner parsing and pending-status reporting.
 
-CI runs `scripts/check-rust-crate-gate.sh` and `cargo test --manifest-path rust/pqcore/Cargo.toml`.
+CI runs:
+
+```bash
+scripts/check-rust-crate-gate.sh
+cargo test --manifest-path rust/pqcore/Cargo.toml
+cargo run --manifest-path rust/pqcore/Cargo.toml --bin rust-vector-runner -- --manifest test-vectors/manifest.json
+```

@@ -138,19 +138,61 @@ The harness also accepts official vector case metadata for the vendored modes:
 For now, official vector case metadata returns a pending result because public algorithm execution and
 output comparison are still blocked by the production implementation gates.
 
-## Future Rust Differential Path
+## Rust Vector Runner
 
-The initial Rust crate exists, but it does not yet include public ML-KEM or ML-DSA algorithm
-implementations or a vector runner. The future differential path should:
+The Rust vector runner lives at:
 
-1. load the same official vector manifest,
-2. run the C++ implementation against each vector,
-3. run the Rust implementation against each vector,
-4. compare both outputs to the official expected output,
-5. compare C++ and Rust outputs to each other,
-6. report parameter set, mode, vector-set id, group id, and test-case id for failures.
+```text
+rust/pqcore/src/vector_runner.rs
+```
 
-No Rust vector runner is added in this ticket. The Rust differential gate remains future work.
+and is exposed through:
+
+```bash
+cargo run --manifest-path rust/pqcore/Cargo.toml --bin rust-vector-runner -- --manifest test-vectors/manifest.json
+```
+
+The runner consumes the same `test-vectors/manifest.json` as the C++ and Python gates. It parses:
+
+- source ids,
+- vector-set ids,
+- schemes,
+- modes,
+- parameter sets,
+- vendored prompt files,
+- vendored expected-results files,
+- group ids,
+- test-case ids.
+
+It intentionally reads only ACVP metadata needed for location and comparison wiring. It must not log
+raw seed, key, ciphertext, signature, message, context, shared-secret, or signing-random fields.
+
+Current Rust public ML-KEM and ML-DSA algorithms are unavailable, so vendored official cases report
+`PENDING` rather than false `PASSED` results. Repository placeholder cases also report `PENDING`
+because they expect public APIs to remain unavailable. Missing expected-results cases report `FAILED`
+with:
+
+- vector-set id,
+- scheme,
+- mode,
+- parameter set,
+- group id,
+- test-case id.
+
+The current manifest run reports:
+
+```text
+summary passed=0 pending=859 skipped=0 failed=0
+```
+
+That is 855 vendored ACVP cases plus four repository placeholder cases.
+
+Once Rust public algorithms exist, this runner is the place to add:
+
+1. Rust output generation for each official vector,
+2. Rust-versus-official expected-output comparison,
+3. C++ output import or execution,
+4. C++-versus-Rust differential comparison.
 
 ## Readiness Caveat
 
