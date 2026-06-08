@@ -5,6 +5,7 @@
 mod field;
 mod params;
 mod polynomial;
+pub mod vector_runner;
 
 const PRODUCTION_READY: bool = false;
 

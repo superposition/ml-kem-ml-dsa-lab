@@ -1,7 +1,7 @@
 # Constant-Time and Side-Channel Review Gate
 
-This gate tracks secret-bearing behavior for the current C++ implementation and the future Rust
-implementation. It does not claim production constant-time behavior.
+This gate tracks secret-bearing behavior for the current C++ implementation, the Rust vector runner,
+and the future Rust implementation. It does not claim production constant-time behavior.
 
 The machine-readable review state is:
 
