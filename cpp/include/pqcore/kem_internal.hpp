@@ -66,6 +66,30 @@ struct MlKemGOutput {
   return selected;
 }
 
+[[nodiscard]] inline MlKemSeed ml_kem_hash_h(std::span<const std::uint8_t> input) {
+  const auto digest = sha3_256(input);
+  MlKemSeed output{};
+  std::copy(digest.begin(), digest.end(), output.begin());
+  return output;
+}
+
+[[nodiscard]] inline MlKemGOutput ml_kem_g(std::span<const std::uint8_t> input) {
+  const auto digest = sha3_512(input);
+  MlKemGOutput output{};
+  std::copy_n(digest.begin(), kMlKemSharedSecretBytes, output.shared_secret.bytes.begin());
+  std::copy_n(digest.begin() + kMlKemSharedSecretBytes, kMlKemSeedBytes, output.coins.begin());
+  return output;
+}
+
+[[nodiscard]] inline SharedSecret ml_kem_j(const MlKemSeed& z,
+                                           std::span<const std::uint8_t> ciphertext) {
+  const auto input = ml_kem_concat(z, ciphertext);
+  const auto expanded = shake256(input, kMlKemSharedSecretBytes);
+  SharedSecret output{};
+  std::copy(expanded.begin(), expanded.end(), output.bytes.begin());
+  return output;
+}
+
 #ifdef PQCORE_ENABLE_TEST_SAMPLING
 [[nodiscard]] inline MlKemSeed ml_kem_hash_h_test(std::span<const std::uint8_t> input) {
   const auto expanded = deterministic_test_expand(input, "ML-KEM-H-TEST", 0, kMlKemSeedBytes);

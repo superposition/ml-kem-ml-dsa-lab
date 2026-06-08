@@ -164,6 +164,65 @@ struct MlKemPkeCiphertext {
       bit_width);
 }
 
+[[nodiscard]] inline MlKemSampleNttSeed ml_kem_pke_matrix_seed(const MlKemSeed& rho,
+                                                               std::uint8_t column,
+                                                               std::uint8_t row) {
+  MlKemSampleNttSeed seed{};
+  std::copy(rho.begin(), rho.end(), seed.begin());
+  seed[32] = column;
+  seed[33] = row;
+  return seed;
+}
+
+[[nodiscard]] inline MlKemPkeNttVector ml_kem_pke_ntt_vector(
+    const MlKemPkePolyVector& vector) {
+  MlKemPkeNttVector transformed{};
+  for (std::size_t index = 0; index < kMlKem512K; ++index) {
+    transformed[index] = ml_kem_ntt(vector[index]);
+  }
+  return transformed;
+}
+
+[[nodiscard]] inline std::array<MlKemSeed, 2> ml_kem_pke_expand_keygen_seeds_512(
+    const MlKemSeed& keygen_seed) {
+  const auto expanded = sha3_512(keygen_seed);
+  std::array<MlKemSeed, 2> seeds{};
+  std::copy_n(expanded.begin(), kMlKemSeedBytes, seeds[0].begin());
+  std::copy_n(expanded.begin() + kMlKemSeedBytes, kMlKemSeedBytes, seeds[1].begin());
+  return seeds;
+}
+
+[[nodiscard]] inline MlKemPkeMatrix ml_kem_pke_generate_matrix_512(const MlKemSeed& rho) {
+  MlKemPkeMatrix matrix{};
+  for (std::size_t row = 0; row < kMlKem512K; ++row) {
+    for (std::size_t column = 0; column < kMlKem512K; ++column) {
+      matrix[row][column] = ml_kem_sample_ntt(
+          ml_kem_pke_matrix_seed(rho, static_cast<std::uint8_t>(column),
+                                 static_cast<std::uint8_t>(row)));
+    }
+  }
+  return matrix;
+}
+
+[[nodiscard]] inline MlKemPolynomial ml_kem_pke_sample_noise_poly_512(
+    const MlKemSeed& seed,
+    std::size_t eta,
+    std::uint8_t nonce) {
+  return ml_kem_sample_poly_cbd(eta, ml_kem_prf(seed, nonce, eta));
+}
+
+[[nodiscard]] inline MlKemPkePolyVector ml_kem_pke_sample_noise_vector_512(
+    const MlKemSeed& seed,
+    std::size_t eta,
+    std::uint8_t first_nonce) {
+  MlKemPkePolyVector vector{};
+  for (std::size_t index = 0; index < kMlKem512K; ++index) {
+    vector[index] = ml_kem_pke_sample_noise_poly_512(
+        seed, eta, static_cast<std::uint8_t>(first_nonce + index));
+  }
+  return vector;
+}
+
 #ifdef PQCORE_ENABLE_TEST_SAMPLING
 [[nodiscard]] inline std::array<MlKemSeed, 2> ml_kem_pke_expand_keygen_seeds_512_test(
     const MlKemSeed& keygen_seed) {
@@ -173,16 +232,6 @@ struct MlKemPkeCiphertext {
   std::copy_n(expanded.begin(), kMlKemSeedBytes, seeds[0].begin());
   std::copy_n(expanded.begin() + kMlKemSeedBytes, kMlKemSeedBytes, seeds[1].begin());
   return seeds;
-}
-
-[[nodiscard]] inline MlKemSampleNttSeed ml_kem_pke_matrix_seed(const MlKemSeed& rho,
-                                                               std::uint8_t column,
-                                                               std::uint8_t row) {
-  MlKemSampleNttSeed seed{};
-  std::copy(rho.begin(), rho.end(), seed.begin());
-  seed[32] = column;
-  seed[33] = row;
-  return seed;
 }
 
 [[nodiscard]] inline MlKemPkeMatrix ml_kem_pke_generate_matrix_512_test(const MlKemSeed& rho) {
@@ -214,15 +263,6 @@ struct MlKemPkeCiphertext {
         seed, eta, static_cast<std::uint8_t>(first_nonce + index));
   }
   return vector;
-}
-
-[[nodiscard]] inline MlKemPkeNttVector ml_kem_pke_ntt_vector(
-    const MlKemPkePolyVector& vector) {
-  MlKemPkeNttVector transformed{};
-  for (std::size_t index = 0; index < kMlKem512K; ++index) {
-    transformed[index] = ml_kem_ntt(vector[index]);
-  }
-  return transformed;
 }
 
 [[nodiscard]] inline MlKemPkeKeyPair ml_kem_pke_keygen_512_test(const MlKemSeed& keygen_seed) {

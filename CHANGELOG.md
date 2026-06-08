@@ -15,6 +15,7 @@
 - Added source-linked ML-KEM encoding/compression derivation, shared encoding fixtures, and C++ encoding tests.
 - Added source-linked ML-KEM NTT derivation, shared NTT fixtures, and C++ NTT oracle tests.
 - Added source-linked sampling derivation, isolated deterministic test hooks, and C++ sampling tests.
+- Added SHA3-256, SHA3-512, SHAKE128, SHAKE256, ML-KEM PRF/XOF/H/G/J wrappers, ML-DSA hash-boundary wrappers, and typed entropy requests.
 - Added source-linked internal ML-KEM-512 PKE derivation and C++ test-hook implementation.
 - Added source-linked internal ML-KEM-512 KEM derivation, implicit-rejection tests, and public fail-closed contract.
 - Added source-linked ML-DSA rounding, hint, and challenge helper derivation with C++ tests.

@@ -14,7 +14,7 @@
     "status": "repository-owned deterministic test-hook examples, not official NIST vectors"
   },
   "public_api": {
-    "production_status": "fail closed until official vector ingestion and real SHA3/SHAKE plumbing exist",
+    "production_status": "fail closed until official vector execution, entropy review, and side-channel review complete",
     "parameter_sets": {
       "ML-KEM-512": {
         "encapsulation_key_bytes": 800,

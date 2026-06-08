@@ -97,8 +97,9 @@ Secret inputs:
 - secret-vector expansion input,
 - signing mask input.
 
-Side-channel note: rejection samplers branch on candidate values. Current tests prove bounds and
-byte-stream behavior only. Real SHAKE/XOF/PRF plumbing and production sampler loops remain blockers.
+Side-channel note: rejection samplers branch on candidate values. Current tests prove bounds,
+byte-stream behavior, and SHAKE-backed PRF/XOF wrapper shape. Secret-bearing production sampler loops
+remain blockers.
 If a production sampler uses bounded rejection, failure handling must destroy intermediates.
 
 ### ML-KEM K-PKE
@@ -126,8 +127,9 @@ Secret-derived intermediates:
 - secret NTT vector,
 - decrypted message.
 
-Side-channel note: the K-PKE path is a deterministic test hook. It preserves the algorithm shape, but
-it is not production cryptography and is not production-reviewed for side channels.
+Side-channel note: K-PKE now has SHAKE-backed seed, matrix, and noise expansion helpers, but the
+end-to-end K-PKE path remains a deterministic test hook. It preserves the algorithm shape, but it is
+not production cryptography and is not production-reviewed for side channels.
 
 ### ML-KEM KEM
 
@@ -159,8 +161,7 @@ than a distinct secret-dependent error. This is reviewed for the internal test h
 
 Production blockers:
 
-- real SHA3/SHAKE/XOF/PRF plumbing,
-- official vectors,
+- official vector execution,
 - optimized compiler-output review,
 - external cryptographic review.
 
@@ -209,15 +210,16 @@ Secret-derived intermediates:
 - response vector,
 - hint vector.
 
-Signing rejection behavior review: the current signing loop is a deterministic flow harness. It
-intentionally exercises a rejection before a deterministic acceptance so tests can inspect the API
-boundary. This is not production signing behavior, and public signing remains fail-closed.
+Signing rejection behavior review: SHAKE256-backed helpers now cover `tr`, `mu`, `rho_second`, and
+challenge bytes. The current signing loop is still a deterministic flow harness. It intentionally
+exercises a rejection before a deterministic acceptance so tests can inspect the API boundary. This is
+not production signing behavior, and public signing remains fail-closed.
 
 Production blockers:
 
 - final ML-DSA key packing,
-- final NTT and SHAKE/XOF plumbing,
-- official vectors,
+- final NTT and expansion plumbing,
+- official vector execution,
 - side-channel review of rejection loops and hint handling,
 - optimized compiler-output review.
 

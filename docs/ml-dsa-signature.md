@@ -33,8 +33,8 @@ Production public functions still fail closed with `NotImplemented`. `ml_dsa_sig
 length and context length before throwing. `ml_dsa_verify` checks public-key length, signature length,
 and context length before throwing.
 
-The public stubs must not be replaced until official vectors, ML-DSA encoding, SHAKE/XOF plumbing,
-ML-DSA NTT, and signature-specific constant-time review exist.
+The public stubs must not be replaced until official vector execution, ML-DSA encoding, ML-DSA NTT,
+final expansion plumbing, and signature-specific constant-time review exist.
 
 ## Message Formatting
 
@@ -150,6 +150,16 @@ The deterministic internal test hook preserves:
 
 This is a flow harness. It is not a valid ML-DSA signature algorithm.
 
+The production-named C++ hash helpers now use SHAKE256 for:
+
+- `tr = H(pk, 64)`,
+- `mu = H(tr || M', 64)`,
+- `rho_second = H(K || rnd || mu, 64)`,
+- `c_tilde = H(mu || witness, lambda / 4)`.
+
+They define the hash boundary for later vector execution. They do not complete `ExpandA`,
+`ExpandS`, `ExpandMask`, ML-DSA NTT, key packing, or the production rejection loop.
+
 ## Internal Verification
 
 FIPS `ML-DSA.Verify_internal(pk, M', signature)`:
@@ -184,8 +194,8 @@ and external cryptographic review are complete.
 
 ## Official Vectors
 
-Official vector ingestion is planned under the ACVP/KAT vector gate. Once those vectors and the missing
-ML-DSA primitives exist, public tests should cover:
+Official vector files are vendored under the ACVP/KAT vector gate. Once the missing ML-DSA primitives
+exist, public tests should cover:
 
 - `ML-DSA.KeyGen_internal`,
 - `ML-DSA.Sign_internal`,
@@ -207,5 +217,5 @@ not an official NIST vector file.
 ## Readiness Caveat
 
 Passing these internal signing-flow tests does not prove ML-DSA correctness or security. Production
-readiness still requires ML-DSA encoding, ML-DSA NTT, SHAKE/XOF/PRF plumbing, official vectors,
-constant-time review, fuzzing, and external cryptographic review.
+readiness still requires ML-DSA encoding, ML-DSA NTT, official vector execution, constant-time review,
+fuzzing, and external cryptographic review.

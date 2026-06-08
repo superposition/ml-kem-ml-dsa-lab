@@ -17,7 +17,7 @@
     "status": "repository-owned deterministic signing-flow examples, not official NIST vectors"
   },
   "public_api": {
-    "production_status": "fail closed until official vector ingestion, ML-DSA encoding, ML-DSA NTT, and real SHAKE/XOF plumbing exist",
+    "production_status": "fail closed until official vector execution, ML-DSA encoding, ML-DSA NTT, final expansion plumbing, and signature-specific constant-time review exist",
     "context_limit_bytes": 255,
     "message_format": "00 || uint8(context_length) || context || message"
   },

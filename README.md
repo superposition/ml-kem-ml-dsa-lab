@@ -18,7 +18,8 @@ This repository is designed as a derivation-first implementation lab. Production
 | Polynomial arithmetic | Yes | C++ | C++ | Internal | Source-linked derivation and schoolbook oracle tests exist |
 | Encoding and compression | Yes | C++ + fixture | C++ | Internal | ML-KEM byte packing and compression derivation exist |
 | NTT representation | Yes | C++ + fixture | C++ | Internal | ML-KEM NTT round trips and schoolbook oracle tests exist |
-| Sampling and deterministic hooks | Yes | C++ + fixture | C++ | Internal | Test-only expansion, rejection, and bounded samplers exist |
+| SHA3/SHAKE boundary | Yes | C++ known-answer tests | C++ | Internal | SHA3-256, SHA3-512, SHAKE128, SHAKE256, and ML-KEM/ML-DSA wrappers exist |
+| Sampling and deterministic hooks | Yes | C++ + fixture | C++ | Internal | SHAKE-backed wrappers, test-only expansion, rejection, and bounded samplers exist |
 | Internal ML-KEM PKE | Partial | C++ + fixture | C++ | Internal | ML-KEM-512 test-hook PKE layer exists |
 | ML-KEM keygen/encap/decap | Partial | C++ + fixture | Internal test hook | Internal | ML-KEM-512 internal KEM path exists; public API fails closed until production plumbing lands |
 | ML-DSA rounding/hints/challenge | Yes | C++ + fixture | C++ helpers | Internal | Power2Round, Decompose, hints, and challenge construction exist |
